@@ -45,8 +45,8 @@
 
 ## 🛠️ 5. Migration
 
-| Rails | Django |
-|-------|--------|
+| Tính năng | Rails | Django |
+|----------|----------------|--------|
 | Tạo model | `rails generate model User name:string` | `python manage.py startapp users` + tạo model thủ công |
 | Tạo migration | `rails db:migrate` | `python manage.py makemigrations` |
 | Apply migration | `rails db:migrate` | `python manage.py migrate` |
@@ -55,8 +55,8 @@
 
 ## 🧪 6. Seed / Insert dữ liệu
 
-| Rails | Django |
-|-------|--------|
+| Tính năng | Rails | Django |
+|----------|----------------|--------|
 | Tạo bản ghi | `User.create(name: "Khang")` | `User.objects.create(name="Khang")` |
 | Seed file | `db/seeds.rb` | Tự viết script hoặc dùng `loaddata` |
 
