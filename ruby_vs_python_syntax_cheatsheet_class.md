@@ -60,14 +60,8 @@
 
 | Mô tả | Ruby | Python |
 |------|------|--------|
-| Hàm đơn giản | `def say_hello(name)
-  puts "Hello \#{name}"
-end` | `def say_hello(name):
-    print(f"Hello {name}")` |
-| Trả về giá trị | `def add(a,b)
-  return a + b
-end` | `def add(a, b):
-    return a + b` |
+| Hàm đơn giản | `def say_hello(name)puts "Hello \#{name}"end` | `def say_hello(name):print(f"Hello {name}")` |
+| Trả về giá trị | `def add(a,b) return a + bend` | `def add(a, b): return a + b` |
 
 ---
 
@@ -75,8 +69,7 @@ end` | `def add(a, b):
 
 | Mô tả | Ruby | Python |
 |------|------|--------|
-| Tạo class | `class User
-end` | `class User:` |
+| Tạo class | `class User end` | `class User:` |
 | Constructor | `def initialize(name)` | `def __init__(self, name):` |
 | Kế thừa | `class Admin < User` | `class Admin(User):` |
 
@@ -86,10 +79,7 @@ end` | `class User:` |
 
 | Mô tả | Ruby | Python |
 |------|------|--------|
-| Ghi đè phương thức | `def to_s
-  "User"
-end` | `def __str__(self):
-    return "User"` |
+| Ghi đè phương thức | `def to_s "User" end` | `def __str__(self): return "User"` |
 
 ---
 
@@ -97,11 +87,7 @@ end` | `def __str__(self):
 
 | Mô tả | Ruby | Python |
 |------|------|--------|
-| Định nghĩa | `def self.say_hi
-  puts "Hi"
-end` | `@classmethod
-def say_hi(cls):
-    print("Hi")` |
+| Định nghĩa | `def self.say_hi puts "Hi" end` | `@classmethod def say_hi(cls): print("Hi")` |
 
 ---
 
@@ -109,14 +95,9 @@ def say_hi(cls):
 
 | Mô tả | Ruby | Python |
 |------|------|--------|
-| Module | `module Greet
-  def hello
-    puts "Hi"
-  end
-end` | — |
+| Module | `module Greet def hello puts "Hi" end end` | — |
 | Mixin | `include Greet` | — |
-| Decorator | — | `@login_required
-def view(): ...` |
+| Decorator | — | `@login_required def view(): ...` |
 
 ---
 
