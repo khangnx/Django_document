@@ -151,3 +151,132 @@ docker system prune               # Xóa container, network, image không dùng
 docker system df                  # Xem dung lượng Docker đang sử dụng
 ```
 
+
+===========================
+# 📦 TỔNG HỢP KIẾN THỨC DOCKER
+===========================
+
+## I. Dockerfile là gì?
+---------------------
+Dockerfile là một tập tin văn bản chứa các lệnh để xây dựng một Docker image. Nó giống như một công thức để tạo ra môi trường chạy ứng dụng.
+
+### Ví dụ Dockerfile cho ứng dụng Node.js:
+---------------------------------------
+```FROM node:18
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## II. Các lệnh phổ biến trong Dockerfile
+---------------------------------------
+| Lệnh        | Ý nghĩa |
+|-------------|--------|
+| FROM        | Chỉ định image nền để xây dựng image mới |
+| LABEL       | Gán metadata cho image |
+| RUN         | Thực thi lệnh trong quá trình build image |
+| CMD         | Lệnh mặc định khi container chạy |
+| ENTRYPOINT  | Giống CMD nhưng không bị ghi đè khi truyền tham số |
+| COPY        | Sao chép file từ máy host vào image |
+| ADD         | Giống COPY nhưng hỗ trợ giải nén và tải từ URL |
+| WORKDIR     | Thiết lập thư mục làm việc trong container |
+| ENV         | Thiết lập biến môi trường |
+| EXPOSE      | Mở cổng để container giao tiếp ra ngoài |
+| VOLUME      | Tạo điểm mount cho volume |
+| USER        | Chỉ định người dùng để chạy lệnh |
+| ARG         | Khai báo biến dùng trong quá trình build |
+| HEALTHCHECK | Kiểm tra tình trạng container |
+| ONBUILD     | Thiết lập lệnh thực thi khi image được dùng làm base image |
+
+### III. Docker Compose là gì?
+---------------------------
+Docker Compose dùng để định nghĩa và chạy nhiều container cùng lúc. Thường dùng cho các ứng dụng có nhiều thành phần như web server, database, cache...
+
+Ví dụ docker-compose.yml cho Node.js + MongoDB:
+------------------------------------------------
+```version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+```
+
+## IV. Có thể chỉ dùng Dockerfile mà không cần Docker Compose không?
+------------------------------------------------------------------
+✅ Có. Nếu ứng dụng chỉ có một service đơn giản, bạn có thể:
+
+1. Viết Dockerfile
+2. Build image:
+   
+   docker build -t ten-image .
+   
+5. Chạy container:
+
+   docker run -p 3000:3000 ten-image
+
+❌ Nên dùng Docker Compose khi:
+- Có nhiều service (web + database + cache)
+- Cần cấu hình mạng, volume, biến môi trường phức tạp
+
+Tóm lại:
+--------
+| Trường hợp | Dùng Dockerfile | Dùng Docker Compose |
+|------------|------------------|----------------------|
+| 1 service đơn giản | ✅ | ❌ |
+| Nhiều service       | ❌ | ✅ |
+| Cấu hình phức tạp   | ❌ | ✅ |
+
+
+# Cách gọi dockerFile từ DockerCompose
+```
+my-app/
+├── Dockerfile
+├── app.js
+├── package.json
+└── docker-compose.yml
+```
+Thì sẽ gọi như sau:
+
+```
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+```
+
+# 🧩 Giải thích:
+
+build:: Chỉ định Docker Compose sẽ build image từ Dockerfile.
+
+context: . → thư mục hiện tại là nơi chứa Dockerfile và mã nguồn.
+dockerfile: Dockerfile → tên file Dockerfile (mặc định là Dockerfile, có thể bỏ dòng này nếu tên không đổi).
+
+
+ports:: ánh xạ cổng từ container ra ngoài.
+environment:: thiết lập biến môi trường cho container.
+
