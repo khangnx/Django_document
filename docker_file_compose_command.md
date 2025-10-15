@@ -113,6 +113,8 @@ networks:
 - build: Build image từ thư mục chứa Dockerfile.
 - networks: Tạo mạng riêng để các container giao tiếp nội bộ.
 - volumes: Lưu trữ dữ liệu bền vững cho database
+Tức là: Volumes là một cơ chế lưu trữ dữ liệu bên ngoài container, được Docker quản lý. Khi bạn khai báo volumes, bạn đang tạo một vùng lưu trữ mà container có thể đọc/ghi dữ liệu vào, nhưng dữ liệu đó không bị mất khi container bị xóa hoặc khởi động lại. 
+Ví dụ khi container badabase bị xóa, volumes của nó vẫn còn tại cd /var/lib/docker/volumes/my_db_data/_data, ta vào đây mà lấy lại.
 ```
 
 # 🚀 Các lệnh Docker nâng cao
