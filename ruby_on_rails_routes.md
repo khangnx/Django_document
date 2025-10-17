@@ -143,7 +143,7 @@ Giải thích: Giới hạn id phải là số.
 Ví dụ:
     GET /photos/abc → Không hợp lệ
     GET /photos/123 → Hợp lệ
-    ```
+```
 
 ## 14. Redirect
 ```
