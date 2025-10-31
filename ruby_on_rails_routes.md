@@ -162,3 +162,47 @@ Ví dụ:
     GET /about → PagesController#about
     POST /about → PagesController#about
 ```
+## namespace và scope đều dùng để tổ chức route, nhưng chúng có mục đích và cách hoạt động hơi khác nhau
+Ví dụ:
+```
+
+namespace :api, defaults: { format: :json } do
+  scope :web do
+    namespace :v1 do
+      resources :orders
+    end
+  end
+end
+
+```
+### ✅ 1. namespace
+
+Tự động thêm tiền tố vào đường dẫn và module controller.
+Dùng để tổ chức controller theo module (thư mục con).
+Tự động ánh xạ tới controller nằm trong module tương ứng.
+
+Ví dụ:
+```
+namespace :admin do
+  resources :users
+end
+```
+Tạo đường dẫn: /admin/users
+Tên route: admin_users_path
+Controller: Admin::UsersController
+
+### ✅ 2. scope
+
+Chỉ thêm tiền tố vào đường dẫn, không ảnh hưởng đến module controller.
+Dùng khi bạn muốn giữ controller ở ngoài module nhưng vẫn có tiền tố URL.
+Ví dụ:
+```
+
+scope :admin do
+  resources :users
+end
+
+```
+Tạo đường dẫn: /admin/users
+Tên route: users_path (không có tiền tố admin_)
+Controller: UsersController (không phải Admin::UsersController)
