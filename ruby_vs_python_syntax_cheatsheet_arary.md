@@ -36,7 +36,7 @@
 | Tạo array | `arr = [1, 2, 3]` | `arr = [1, 2, 3]` |
 | Truy cập phần tử | `arr[0]` | `arr[0]` |
 | Thêm phần tử | `arr << 4` | `arr.append(4)` |
-| Duyệt mảng | "`arr.each do |x| puts x end`" | `for x in arr: print(x)` |
+| Duyệt mảng | ```arr.each do |x| puts x end``` | ```for x in arr: print(x)``` |
 
 ---
 
