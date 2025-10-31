@@ -187,9 +187,11 @@ namespace :admin do
   resources :users
 end
 ```
+```
 Tạo đường dẫn: /admin/users
 Tên route: admin_users_path
 Controller: Admin::UsersController
+```
 
 ### ✅ 2. scope
 
@@ -203,6 +205,8 @@ scope :admin do
 end
 
 ```
+```
 Tạo đường dẫn: /admin/users
 Tên route: users_path (không có tiền tố admin_)
 Controller: UsersController (không phải Admin::UsersController)
+```
