@@ -115,6 +115,7 @@ Ví dụ:
     GET /posts/1/comments
     GET /videos/1/comments
 ```
+Cả hai đều có route cho comments, nhưng không cần viết lại nhiều lần.
 ## 11. Namespace
 ```
 Cú pháp:
