@@ -124,3 +124,25 @@ User.includes(:posts)
 | Truy vấn có điều kiện từ bảng liên quan | joins, eager_load, includes + references |
 | Truy vấn đơn giản, không cần lọc | preload |
 | Truy vấn phức tạp, cần JOIN và lọc | eager_load hoặc joins
+
+
+# So sánh update và updated!, save và save!
+
+## ✅ update
+```
+user.update(name: "Khang")
+```
+
+Trả về true nếu cập nhật thành công.
+Trả về false nếu validation thất bại.
+Không raise exception (không gây lỗi chương trình).
+
+## ✅ update! (có dấu chấm than)
+```
+user.update!(name: "Khang")
+```
+Trả về bản ghi nếu thành công.
+Raise exception (ActiveRecord::RecordInvalid) nếu validation thất bại.
+Dùng khi bạn muốn chương trình dừng lại ngay nếu có lỗi.
+
+Tương tự save và save! cũng nhu6 uodate.
