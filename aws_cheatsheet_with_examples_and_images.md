@@ -53,3 +53,70 @@
 |--------|-------|----------------|--------|
 | **CloudWatch** | Ví dụ: Theo dõi CPU và RAM của EC2 để cảnh báo khi quá tải.<br> Giám sát tài nguyên AWS | Theo dõi hiệu suất, cảnh báo | Miễn phí cơ bản, trả tiền cho logs |
 | **CloudTrail** | Ví dụ: Ghi lại lịch sử truy cập API để phục vụ audit.<br> Ghi lại hoạt động API | Audit, bảo mật, compliance | Miễn phí cơ bản |
+
+
+
+# Các cách tính phí trogn AWS
+## ✅ 1. Pay-as-you-go (Trả theo mức sử dụng)
+
+Bạn chỉ trả tiền cho tài nguyên đã dùng.
+Ví dụ:
+
+EC2: tính theo giờ hoặc giây chạy instance.
+S3: tính theo dung lượng lưu trữ (GB/tháng) + số request.
+Lambda: tính theo số lần gọi và thời gian thực thi (ms).
+
+
+
+
+## ✅ 2. On-Demand Pricing
+
+Không cam kết dài hạn.
+Giá cao hơn nhưng linh hoạt.
+Phù hợp cho workload biến động hoặc thử nghiệm.
+
+
+## ✅ 3. Reserved Instances
+
+Cam kết sử dụng trong 1 hoặc 3 năm.
+Giảm giá đến 72% so với On-Demand.
+Áp dụng cho EC2, RDS, ElastiCache...
+
+
+## ✅ 4. Savings Plans
+
+Cam kết chi tiêu tối thiểu (USD/giờ) trong 1 hoặc 3 năm.
+Linh hoạt hơn Reserved Instances vì áp dụng cho nhiều dịch vụ (EC2, Fargate, Lambda).
+
+
+## ✅ 5. Spot Instances
+
+Mua tài nguyên dư thừa với giá rẻ (giảm đến 90%).
+Có thể bị thu hồi khi AWS cần tài nguyên.
+Phù hợp cho batch job, xử lý không yêu cầu liên tục.
+
+
+## ✅ 6. Free Tier
+
+Miễn phí giới hạn trong 12 tháng hoặc vĩnh viễn cho một số dịch vụ.
+Ví dụ: 750 giờ EC2 t2.micro/tháng, 5GB S3.
+
+
+## ✅ 7. Data Transfer Pricing
+
+Tính phí dựa trên lượng dữ liệu ra/vào AWS.
+Inbound (vào AWS): thường miễn phí.
+Outbound (ra Internet): tính phí theo GB.
+
+
+## ✅ 8. Additional Costs
+
+Storage Class (S3 Standard vs Glacier).
+API Request (S3 PUT/GET).
+Load Balancer: tính theo giờ + số request.
+Managed Services: phí quản lý (ví dụ RDS có phí instance + storage + backup).
+
+## Hình Minh họa
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1977a08c-60b8-4e9d-95b3-9ae27aaf35b9" />
+
