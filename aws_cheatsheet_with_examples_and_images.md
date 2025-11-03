@@ -120,3 +120,54 @@ Managed Services: phí quản lý (ví dụ RDS có phí instance + storage + ba
 
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1977a08c-60b8-4e9d-95b3-9ae27aaf35b9" />
 
+
+
+### Lambda và S3 không tự chứng thực người dùng trực tiếp, mà việc chứng thực thường được thực hiện thông qua AWS Identity and Access Management (IAM) hoặc các dịch vụ trung gian như Amazon Cognito, API Gateway, hoặc ứng dụng backend. Dưới đây là cách phổ biến để chứng thực và phân quyền người dùng khi sử dụng Lambda và S3:
+
+## 1. Chứng thực qua Amazon Cognito (phổ biến cho ứng dụng web/mobile)
+
+Người dùng đăng nhập qua Cognito (hoặc liên kết với Google, Facebook, v.v.).
+Cognito cấp JWT token cho người dùng.
+Token này được gửi kèm trong request đến API Gateway.
+API Gateway xác thực token và chuyển request đến Lambda.
+Lambda có thể dùng IAM role để truy cập S3 nếu cần.
+
+
+Ưu điểm: Tách biệt rõ ràng giữa chứng thực và xử lý logic, dễ mở rộng.
+
+
+## 2. Chứng thực qua API Gateway + Lambda
+
+API Gateway có thể cấu hình để xác thực bằng:
+
+JWT token (qua Cognito hoặc bên thứ ba).
+Lambda Authorizer: một hàm Lambda chuyên kiểm tra token và trả về quyền truy cập.
+
+
+Sau khi xác thực, request được chuyển đến Lambda chính để xử lý.
+Lambda có thể truy cập S3 bằng IAM role gắn với nó.
+
+
+## 3. Chứng thực trong Lambda (ít phổ biến hơn)
+
+Lambda tự kiểm tra token hoặc thông tin người dùng trong request.
+Nếu hợp lệ, Lambda thực hiện hành động (ví dụ: đọc/ghi S3).
+Cần đảm bảo IAM role của Lambda có quyền truy cập S3.
+
+
+Cách này đơn giản nhưng không tối ưu cho bảo mật và mở rộng.
+
+
+## 4. Phân quyền truy cập S3
+
+S3 không chứng thực người dùng cuối, mà dựa vào IAM role hoặc pre-signed URL:
+
+Lambda có thể tạo pre-signed URL cho phép người dùng tải lên hoặc tải xuống file từ S3 mà không cần quyền IAM.
+Hoặc dùng IAM policy để giới hạn quyền truy cập theo user hoặc nhóm.
+
+Tóm tắt luồng phổ biến:
+Người dùng → Cognito → API Gateway → Lambda → S3
+
+Hoặc:
+Người dùng → App → Lambda → S3 (với pre-signed URL)
+
