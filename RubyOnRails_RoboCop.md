@@ -163,3 +163,65 @@ bundle exec overcommit --sign
 - https://docs.rubocop.org/rubocop-rails/
 - https://github.com/rubocop/rubocop-rails
 - https://docs.rubocop.org/rubocop-rails/cops_rails.html
+
+
+# 📌 Các lệnh cơ bản
+
+rubocop
+    → Kiểm tra toàn bộ mã nguồn trong thư mục hiện tại.
+
+rubocop path/to/file.rb
+    → Kiểm tra một file cụ thể.
+
+rubocop app/ lib/
+    → Kiểm tra nhiều thư mục cùng lúc.
+
+rubocop -A
+    → Tự động sửa tất cả lỗi có thể sửa được (autocorrect mạnh).
+
+rubocop -a
+    → Tự động sửa lỗi nhẹ (autocorrect an toàn).
+
+rubocop --only Style/StringLiterals
+    → Chỉ kiểm tra một cop cụ thể.
+
+rubocop --except Metrics/LineLength
+    → Bỏ qua một cop cụ thể.
+
+rubocop --fail-level E
+    → Chỉ fail khi có lỗi cấp độ Error trở lên.
+
+rubocop --format simple
+    → Hiển thị kết quả ở định dạng đơn giản.
+
+rubocop --format json
+    → Xuất kết quả ở định dạng JSON (dùng cho CI/CD).
+
+rubocop --auto-gen-config
+    → Tạo file .rubocop_todo.yml để bỏ qua các lỗi hiện tại.
+
+🧪 Lệnh kiểm tra theo Git
+
+rubocop --force-exclusion
+    → Bỏ qua các file đã được exclude trong .rubocop.yml.
+
+rubocop $(git diff --name-only HEAD)
+    → Kiểm tra các file đã thay đổi so với commit gần nhất.
+
+rubocop $(git diff --cached --name-only)
+    → Kiểm tra các file đã staged để commit.
+
+🧰 Lệnh hỗ trợ debug và cấu hình
+
+rubocop --debug
+    → Hiển thị thông tin debug chi tiết.
+
+rubocop --show-cops
+    → Hiển thị danh sách tất cả các cops đang bật.
+
+rubocop --show-cops Rails
+    → Hiển thị các cops thuộc nhóm Rails.
+
+rubocop --config .rubocop.yml
+    → Chạy với file cấu hình cụ thể.
+
