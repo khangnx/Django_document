@@ -171,3 +171,88 @@ Người dùng → Cognito → API Gateway → Lambda → S3
 Hoặc:
 Người dùng → App → Lambda → S3 (với pre-signed URL)
 
+
+## Tài liệu tổng hợp về AWS IAM và Terraform
+
+### 1. AWS IAM là gì?
+
+**IAM** là viết tắt của **Identity and Access Management** trong AWS, nghĩa là **Quản lý danh tính và quyền truy cập**. Đây là dịch vụ giúp bạn kiểm soát ai có thể truy cập vào tài nguyên AWS và họ có thể làm gì với các tài nguyên đó.
+
+#### Các thành phần chính của IAM:
+
+- **User**: Đại diện cho con người hoặc ứng dụng.
+- **Group**: Tập hợp các user để gán quyền chung.
+- **Role**: Quyền tạm thời, thường dùng cho EC2, Lambda, hoặc dịch vụ khác.
+- **Policy**: Tập hợp các quy tắc (định dạng JSON) định nghĩa quyền truy cập.
+
+```
+#### Ví dụ về IAM Policy:
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::ten-bucket"
+    }
+  ]
+}
+```
+
+### 2. Viết Terraform để tạo IAM Role
+
+Dưới đây là ví dụ đầy đủ về cách dùng Terraform để tạo IAM Role và gán policy cho phép truy cập S3:
+```
+provider "aws" {
+  region = "ap-southeast-1"
+}
+
+resource "aws_iam_role" "lambda_s3_role" {
+  name = "lambda_s3_access_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "s3_list_policy" {
+  name        = "S3ListBucketPolicy"
+  description = "Cho phép Lambda liệt kê nội dung bucket S3"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "s3:ListBucket",
+        Resource = "arn:aws:s3:::ten-bucket"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_policy" {
+  role       = aws_iam_role.lambda_s3_role.name
+  policy_arn = aws_iam_policy.s3_list_policy.arn
+}
+```
+
+#### Các bước thực hiện:
+1. Lưu nội dung trên vào file `.tf` (ví dụ: `iam_role.tf`).
+2. Chạy `terraform init` để khởi tạo.
+3. Chạy `terraform apply` để triển khai IAM Role và Policy lên AWS.
+
+---
+
+### Ghi chú:
+- Đảm bảo bạn đã cấu hình AWS credentials (qua `~/.aws/credentials` hoặc biến môi trường).
+- Role này có thể gán cho Lambda để cho phép truy cập S3.
+
