@@ -90,3 +90,109 @@ class LoginTest extends DuskTestCase
     }  
 }
 ```
+
+
+# Khi viết test cho ứng dụng PHP hoặc Laravel, việc tạo dữ liệu giả (fake data) là rất quan trọng để kiểm thử logic mà không phụ thuộc vào dữ liệu thật. PHPUnit và Laravel (bao gồm Laravel Dusk cho test giao diện) đều hỗ trợ nhiều cách để tạo dữ liệu giả.
+
+## Phần 1: PHPUnit
+
+### 1. Mock Objects
+- PHPUnit cung cấp phương thức:
+- ```
+  - createMock(ClassName::class)
+  - getMockBuilder(ClassName::class)->getMock()
+  ``
+- Dùng để giả lập hành vi của class hoặc interface mà không cần kết nối thực tế.
+
+Ví dụ:
+```
+public function testUserRepository()
+{
+    $mockDb = $this->createMock(Database::class);
+    $mockDb->method('find')->willReturn(['id' => 1, 'name' => 'John Doe']);
+
+    $repo = new UserRepository($mockDb);
+    $result = $repo->getUser(1);
+
+    $this->assertEquals('John Doe', $result['name']);
+}
+
+```
+### 2. Dùng Faker trong PHPUnit
+```
+- Faker là thư viện phổ biến để tạo dữ liệu giả như tên, email, địa chỉ.
+- Cài đặt: composer require fakerphp/faker --dev
+
+Ví dụ:
+use Faker\Factory;
+
+public function testWithFakeData()
+{
+    $faker = Factory::create();
+    $name = $faker->name;
+    $email = $faker->email;
+
+    $this->assertNotEmpty($name);
+    $this->assertNotEmpty($email);
+}
+```
+## Phần 2: Laravel
+
+### 1. Seeder với Faker
+Có thể dùng Faker trực tiếp trong Seeder:
+```
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
+
+class UserSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $faker = Faker::create();
+
+        foreach (range(1, 10) as $index) {
+            DB::table('users')->insert([
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'password' => bcrypt('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+}
+```
+### 2. Seeder với Factory
+Seeder trợ Factory tích hợp Faker sẵn.
+```
+class UserSeeder extends Seeder
+{
+    public function run(): void
+    {
+        User::factory()->count(50)->create();
+    }
+}
+
+Ví dụ Factory (UserFactory.php):
+public function definition(): array
+{
+    return [
+        'name' => $this->faker->name(),
+        'email' => $this->faker->unique()->safeEmail(),
+        'password' => bcrypt('password'),
+    ];
+}
+```
+### 3. Cách chạy Seeder
+- Đăng ký Seeder trong DatabaseSeeder.php:
+```
+public function run(): void
+{
+    $this->call([
+        UserSeeder::class,
+    ]);
+}
+```
+- Chạy lệnh:
+php artisan db:seed
