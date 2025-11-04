@@ -9,15 +9,19 @@ Phần 1: So sánh double vs instance_double trong RSpec
 
 Ví dụ:
 # double
+```
 user = double("User", name: "Alice")
 puts user.name  # => "Alice"
+```
 
 # instance_double
+```
 class User
   def name; end
 end
 user = instance_double(User, name: "Alice")
 puts user.name  # => "Alice"
+```
 
 Phần 2: So sánh stub vs spy trong RSpec
 
@@ -29,10 +33,14 @@ Phần 2: So sánh stub vs spy trong RSpec
 
 Ví dụ:
 # stub
+```
 allow(user).to receive(:name).and_return("Alice")
 puts user.name  # => "Alice"
+```
 
 # spy
+```
 user = spy("User")
 user.name("Alice")
 expect(user).to have_received(:name).with("Alice")
+```
