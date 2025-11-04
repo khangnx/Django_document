@@ -107,6 +107,21 @@ message User { int32 id = 1; string name = 2; }
 |Hiệu năng|Trung bình|Cao|
 |Tương thích|Rộng rãi|Cần hỗ trợ HTTP/2|
 
+
+## 6. Xác thực khi dùng REST API và gRPC API
+### REST API
+
+OAuth 2.0: Chuẩn phổ biến cho xác thực và phân quyền.
+JWT (JSON Web Token): Dùng để truyền thông tin xác thực an toàn giữa client và server.
+API Key: Đơn giản nhưng kém an toàn hơn.
+HTTPS: Bắt buộc để mã hóa dữ liệu truyền tải.
+### gRPC API
+
+TLS (Transport Layer Security): Bảo mật kết nối giữa client và server.
+Token-based Authentication: Có thể dùng JWT hoặc OAuth.
+Mutual TLS (mTLS): Xác thực hai chiều giữa client và server.
+Interceptor: Thêm logic xác thực vào gRPC call
+
 ## 9. Tài nguyên tham khảo
 - https://zuplo.com
 - https://grpc.io
