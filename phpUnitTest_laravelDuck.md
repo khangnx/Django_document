@@ -90,5 +90,3 @@ class LoginTest extends DuskTestCase
     }  
 }
 ```
-    }
-}
