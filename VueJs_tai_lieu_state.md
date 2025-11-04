@@ -10,6 +10,7 @@
 ### a. State trong Component (Local State)
 - Được khai báo trong data() của component.
 Ví dụ:
+```
 <template>
   <div>
     <p>{{ count }}</p>
@@ -30,7 +31,7 @@ export default {
   }
 };
 </script>
-
+```
 ### b. State chia sẻ giữa các component
 - Dùng props để truyền dữ liệu từ cha xuống con.
 - Dùng emit để gửi sự kiện từ con lên cha.
@@ -43,7 +44,7 @@ export default {
 
 ## 3. State với Composition API (Vue 3)
 - Dùng ref() hoặc reactive() để tạo state.
-
+```
 Ví dụ với ref():
 <script setup>
 import { ref } from 'vue';
@@ -69,7 +70,7 @@ function increment() {
   <p>{{ state.count }}</p>
   <button @click="increment">Tăng</button>
 </template>
-
+```
 ## 4. Khi nào dùng Vuex hoặc Pinia?
 - Khi ứng dụng có nhiều component cần truy cập và cập nhật cùng một state.
 - Khi logic quản lý state phức tạp (ví dụ: nhiều mutation, action, hoặc cần lưu cache).
@@ -81,17 +82,20 @@ function increment() {
 - Dùng cho giá trị đơn hoặc object đơn giản.
 - Trả về object có thuộc tính .value.
 Ví dụ:
+```
 import { ref } from 'vue';
 const count = ref(0);
 count.value++;
-
+```
 ## reactive()
 - Dùng cho object hoặc array phức tạp.
 - Trả về proxy object, không cần .value.
 Ví dụ:
+```
 import { reactive } from 'vue';
 const state = reactive({ count: 0, name: 'Vue' });
 state.count++;
+```
 
 So sánh nhanh:
 | Đặc điểm        | ref()                     | reactive()                  |
@@ -130,6 +134,7 @@ So sánh nhanh:
 - Phương thức đồng bộ để thay đổi trực tiếp state.
 - Nhận vào state và payload.
 Ví dụ:
+```
 const store = new Vuex.Store({
   state: { count: 0 },
   mutations: {
@@ -139,10 +144,11 @@ const store = new Vuex.Store({
   }
 });
 store.commit('increment', 5);
-
+```
 ## Action
 - Phương thức bất đồng bộ, dùng để thực hiện logic trước khi commit mutation.
 Ví dụ:
+```
 const store = new Vuex.Store({
   state: { count: 0 },
   mutations: {
@@ -158,7 +164,7 @@ const store = new Vuex.Store({
   }
 });
 store.dispatch('incrementAsync');
-
+```
 So sánh nhanh:
 | Tiêu chí       | Mutation                     | Action                        |
 |---------------|-----------------------------|-----------------------------|
