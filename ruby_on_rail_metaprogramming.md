@@ -25,7 +25,12 @@ Ví dụ:
       end
     end
   end
-```
+
+### Cách gọi như sau:
+
+hello = Hello.new
+hello.say_hello_to_vietnam
+==> Kết quả sẽ in ra:Hello, Vietnam!
 ```
 - method_missing – Bắt phương thức chưa định nghĩa
   class DynamicHello
