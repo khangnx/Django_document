@@ -196,3 +196,47 @@ public function run(): void
 ```
 - Chạy lệnh:
 php artisan db:seed
+
+
+# So sánh giữa E2E Testing và Unit Testing:
+
+## ✅ 1. Mục tiêu
+
+E2E Testing: Kiểm tra toàn bộ luồng hoạt động của ứng dụng từ đầu đến cuối, mô phỏng hành vi thực tế của người dùng.
+Unit Testing: Kiểm tra một đơn vị nhỏ nhất của mã (thường là một hàm hoặc phương thức) để đảm bảo nó hoạt động đúng.
+
+
+## ✅ 2. Phạm vi
+
+E2E: Bao gồm nhiều thành phần (UI, API, DB, dịch vụ bên thứ ba).
+Unit: Chỉ tập trung vào logic nội bộ của một module hoặc hàm.
+
+
+## ✅ 3. Tốc độ
+
+E2E: Chạy chậm hơn vì phải khởi tạo môi trường, trình duyệt, dữ liệu.
+Unit: Chạy rất nhanh, thường chỉ vài mili-giây cho mỗi test.
+
+
+## ✅ 4. Độ phức tạp
+
+E2E: Khó thiết lập, cần công cụ như Cypress, Playwright, Selenium.
+Unit: Dễ viết, thường dùng JUnit, pytest, Mocha.
+
+
+## ✅ 5. Chi phí bảo trì
+
+E2E: Cao, vì khi UI hoặc luồng nghiệp vụ thay đổi, test dễ bị hỏng.
+Unit: Thấp, vì chỉ phụ thuộc vào logic code.
+
+
+## ✅ 6. Mục đích sử dụng
+
+E2E: Đảm bảo hệ thống hoạt động đúng khi tích hợp.
+Unit: Đảm bảo từng phần nhỏ hoạt động chính xác.
+
+
+📌 Ví dụ minh họa:
+
+Unit Test: Kiểm tra hàm calculateTotal(price, quantity) trả về đúng kết quả.
+E2E Test: Mô phỏng người dùng đăng nhập, thêm sản phẩm vào giỏ, thanh toán và nhận email xác nhận.
