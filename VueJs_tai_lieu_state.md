@@ -181,3 +181,126 @@ Trong Pinia:
 - Dùng ref cho giá trị đơn, reactive cho object phức tạp.
 - Dùng Pinia cho Vue 3 để quản lý state toàn cục.
 - Mutation và Action giúp kiểm soát luồng dữ liệu trong Vuex.
+
+# Ví dụ cụ thể: có 1 file settings.js trong store chứa cá state setting như sau:
+```
+import variables from '@/styles/element-variables.scss'
+import defaultSettings from '@/settings'
+
+const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
+
+const state = {
+  theme: variables.theme,
+  showSettings: showSettings,
+  tagsView: tagsView,
+  fixedHeader: fixedHeader,
+  sidebarLogo: sidebarLogo
+}
+
+const mutations = {
+  CHANGE_SETTING: (state, { key, value }) => {
+    if (state.hasOwnProperty(key)) {
+      state[key] = value
+    }
+  }
+}
+
+const actions = {
+  changeSetting({ commit }, data) {
+    commit('CHANGE_SETTING', data)
+  }
+}
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}
+```
+## Cách thay đổi state trong một compoment cụ thể như sau:
+
+### ✅ 1. Thay đổi state trong component
+Đoạn code trên là một Vuex module với namespace settings. Để thay đổi state từ component, bạn sẽ dùng action changeSetting (hoặc trực tiếp commit mutation nếu muốn).
+
+- Ví dụ dùng teong compoment là settingLayout.vue
+```
+<template>
+  <div>
+    <h3>Cài đặt giao diện</h3>
+    <button @click="updateTheme('#000000')">Đổi theme sang đen</button>
+    <button @click="toggleHeader">Bật/Tắt Header cố định</button>
+  </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'ChangeSettings',
+  methods: {
+    ...mapActions('settings', ['changeSetting']),
+    updateTheme(color) {
+      this.changeSetting({ key: 'theme', value: color });
+    },
+    toggleHeader() {
+      this.changeSetting({ key: 'fixedHeader', value: true });
+    }
+  }
+};
+</script>
+```
+- Giải thích:
+```
+mapActions('settings', ['changeSetting']) → gọi action trong module settings.
+changeSetting({ key, value }) → gửi dữ liệu đến mutation để cập nhật state.
+```
+### ✅ 2. Reset state về mặc định
+Để reset về giá trị mặc định từ defaultSettings, bạn cần thêm một mutation và action mới:
+```
+const mutations = {
+  CHANGE_SETTING: (state, { key, value }) => {
+    if (state.hasOwnProperty(key)) {
+      state[key] = value;
+    }
+  },
+  RESET_SETTINGS: (state) => {
+    state.theme = variables.theme;
+    state.showSettings = defaultSettings.showSettings;
+    state.tagsView = defaultSettings.tagsView;
+    state.fixedHeader = defaultSettings.fixedHeader;
+    state.sidebarLogo = defaultSettings.sidebarLogo;
+  }
+};
+
+const actions = {
+  changeSetting({ commit }, data) {
+    commit('CHANGE_SETTING', data);
+  },
+  resetSettings({ commit }) {
+    commit('RESET_SETTINGS');
+  }
+};
+```
+- Ví dụ component reset state dùng cho nuit reset trong compoment settingLayout.vue 
+```
+<template>
+  <div>
+    <button @click="resetSettings">Reset về mặc định</button>
+  </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'ResetSettings',
+  methods: {
+    ...mapActions('settings', ['resetSettings'])
+  }
+};
+</script>
+```
+- Giải thích:
+
+Khi click nút Reset, gọi action resetSettings → mutation RESET_SETTINGS → state trở về mặc định.
