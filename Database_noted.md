@@ -112,3 +112,150 @@ Dùng cho phân tích và báo cáo. Có thể dùng Data Warehouse (như Snowfl
 
 - Nếu báo cáo yêu cầu nhiều phép join phức tạp, cân nhắc denormalization (giảm chuẩn hóa) cho bảng báo cáo.
 - Với dữ liệu lịch sử, có thể lưu ở dạng cold storage và chỉ truy vấn khi cần.
+
+=============================================================================================
+# Những điều cần tránh trong từng loại cơ sở dữ liệu:
+
+✅ **MySQL – Giải thích chi tiết từng điểm**
+
+
+1. ***SELECT***
+
+- Khi dùng SELECT *, MySQL sẽ trả về tất cả các cột, gây tốn băng thông và bộ nhớ, đặc biệt với bảng lớn.
+- Hậu quả: Truy vấn chậm, khó tối ưu cache.
+- Giải pháp: Chỉ chọn cột cần thiết.
+
+2. ***Không tạo Index cho cột lọc/sắp xếp***
+
+- Nếu không có index, MySQL phải quét toàn bộ bảng (Full Table Scan).
+- Hậu quả: Truy vấn WHERE hoặc ORDER BY rất chậm.
+- Giải pháp: Tạo index cho cột thường dùng trong WHERE, JOIN, ORDER BY.
+
+3 ***Dùng hàm trên cột trong WHERE sẽ làm index mất tác dụng**
+
+- Ví dụ: WHERE YEAR(created_at)=2025 → MySQL không dùng index vì phải tính hàm cho từng dòng.
+- Giải pháp: Dùng range: WHERE created_at BETWEEN '2025-01-01' AND '2025-12-31'.
+
+
+
+4 ***JOIN nhiều bảng mà không có điều kiện rõ ràng***
+
+- JOIN thiếu điều kiện hoặc dùng CROSS JOIN sẽ tạo ra số lượng bản ghi khổng lồ.
+- Giải pháp: Luôn có điều kiện JOIN và kiểm tra bằng EXPLAIN.
+
+
+
+5 ***Kiểu dữ liệu không tối ưu***
+
+- Ví dụ: dùng TEXT cho dữ liệu ngắn hoặc VARCHAR(255) cho mọi cột.
+- Hậu quả: Tốn dung lượng, giảm tốc độ.
+- Giải pháp: Chọn kiểu dữ liệu phù hợp (INT, DATE, ENUM…).
+
+
+
+6 ***Không phân trang (LIMIT)***
+
+- Truy vấn trả về hàng triệu bản ghi gây nghẽn.
+- Giải pháp: Dùng LIMIT hoặc phân trang theo batch.
+
+
+
+7 ***Subquery lồng nhau phức tạp***
+
+- Subquery nhiều tầng làm MySQL phải chạy nhiều lần.
+- Giải pháp: Dùng JOIN hoặc tạm bảng.
+
+
+
+8 ***Không kiểm tra EXPLAIN***
+
+- Không biết truy vấn chạy thế nào → khó tối ưu.
+- Giải pháp: Dùng EXPLAIN để xem kế hoạch thực thi.
+
+
+
+9 ***ORDER BY không có index***
+
+- Sắp xếp toàn bộ bảng gây tốn CPU.
+- Giải pháp: Tạo index cho cột sắp xếp.
+
+
+
+10 ***Không tối ưu cấu trúc bảng***
+
+- Thiết kế bảng không chuẩn hóa hoặc quá nhiều cột gây chậm.
+- Giải pháp: Chuẩn hóa hợp lý, tránh dư thừa.
+
+
+
+
+✅ ***PostgreSQL – Giải thích chi tiết từng điểm***
+
+
+1 ***Không VACUUM và ANALYZE**
+
+- PostgreSQL không tự dọn dẹp hoàn toàn → bảng phình to, index kém hiệu quả.
+- Giải pháp: Chạy VACUUM và ANALYZE định kỳ hoặc bật autovacuum.
+
+
+
+2 ***Không dùng CTE khi subquery phức tạp**
+
+- Subquery lồng nhau khó tối ưu.
+- Giải pháp: Dùng WITH (CTE) để dễ đọc và tối ưu.
+
+
+
+3 ***Không tận dụng Partial Index hoặc Expression Index***
+
+- PostgreSQL hỗ trợ index nâng cao, nhưng nhiều người bỏ qua.
+- Giải pháp: Tạo index cho điều kiện cụ thể hoặc biểu thức.
+
+
+
+4 ***Không dùng LIMIT/OFFSET cho phân trang lớn***
+
+- OFFSET lớn gây chậm vì vẫn phải đọc dữ liệu trước đó.
+- Giải pháp: Dùng keyset pagination (WHERE id > last_id).
+
+
+
+5 ***Không kiểm tra EXPLAIN ANALYZE***
+
+- Không biết chi phí thực tế của truy vấn.
+- Giải pháp: Dùng EXPLAIN ANALYZE để tối ưu.
+
+
+
+6 ***Không tối ưu JOIN với index phù hợp***
+
+- JOIN bảng lớn mà không có index sẽ rất chậm.
+- Giải pháp: Tạo index cho cột JOIN.
+
+
+
+7 ***Không dùng kiểu dữ liệu chuẩn (UUID, JSONB)***
+
+- Dùng TEXT cho JSON hoặc ID gây khó tối ưu.
+- Giải pháp: Dùng kiểu dữ liệu chuyên dụng.
+
+
+
+8 ***ORDER BY mà không có index***
+
+- Giống MySQL, gây tốn CPU.
+- Giải pháp: Tạo index cho cột sắp xếp.
+
+
+
+9 ***Không cấu hình autovacuum hợp lý***
+
+- Autovacuum mặc định có thể không đủ cho bảng lớn.
+- Giải pháp: Tinh chỉnh thông số autovacuum.
+
+
+
+10 ***Không tận dụng tính năng Parallel Query***
+
+- PostgreSQL hỗ trợ chạy song song nhưng nhiều người không bật.
+- Giải pháp: Bật parallel_setup_cost và parallel_tuple_cost hợp lý.
