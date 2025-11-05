@@ -187,3 +187,246 @@ Giả sử:
  - CloudWatch: ~$10/tháng → $120/năm.
 
 ==>Tổng cộng ~ $3,576/năm (~85 triệu VND).
+=============================================================================
+File terraForm cho toàn bộ cấu hình AWS trên
+
+```
+
+provider "aws" {
+  region = var.aws_region
+}
+
+variable "aws_region" {
+  default = "us-east-1"
+}
+
+variable "project_name" {
+  default = "laravel-vue-app"
+}
+
+# VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "${var.project_name}-vpc"
+  }
+}
+
+# Subnets
+resource "aws_subnet" "public" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  availability_zone = "${var.aws_region}a"
+  tags = {
+    Name = "${var.project_name}-public-subnet"
+  }
+}
+
+resource "aws_subnet" "private" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "${var.aws_region}b"
+  tags = {
+    Name = "${var.project_name}-private-subnet"
+  }
+}
+
+# Internet Gateway
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "${var.project_name}-igw"
+  }
+}
+
+# Security Groups
+resource "aws_security_group" "alb_sg" {
+  name        = "${var.project_name}-alb-sg"
+  description = "Allow HTTP and HTTPS"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "ec2_sg" {
+  name        = "${var.project_name}-ec2-sg"
+  description = "Allow traffic from ALB"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Application Load Balancer
+resource "aws_lb" "app_alb" {
+  name               = "${var.project_name}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = [aws_subnet.public.id]
+}
+
+resource "aws_lb_target_group" "app_tg" {
+  name     = "${var.project_name}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+}
+
+resource "aws_lb_listener" "http_listener" {
+  load_balancer_arn = aws_lb.app_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_tg.arn
+  }
+}
+
+# Launch Template cho EC2
+resource "aws_launch_template" "app_lt" {
+  name_prefix   = "${var.project_name}-lt"
+  image_id      = "ami-12345678" # Thay bằng AMI thực tế
+  instance_type = "t3.medium"
+
+  network_interfaces {
+    security_groups = [aws_security_group.ec2_sg.id]
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "${var.project_name}-instance"
+    }
+  }
+}
+
+# Auto Scaling Group
+resource "aws_autoscaling_group" "app_asg" {
+  name                      = "${var.project_name}-asg"
+  desired_capacity          = 3
+  max_size                  = 3
+  min_size                  = 3
+  vpc_zone_identifier       = [aws_subnet.private.id]
+  launch_template {
+    id      = aws_launch_template.app_lt.id
+    version = "$Latest"
+  }
+  target_group_arns = [aws_lb_target_group.app_tg.arn]
+}
+
+# RDS PostgreSQL
+resource "aws_db_instance" "app_db" {
+  identifier         = "${var.project_name}-db"
+  engine             = "postgres"
+  instance_class     = "db.t3.medium"
+  allocated_storage  = 20
+  username           = "admin"
+  password           = "password123"
+  skip_final_snapshot = true
+  multi_az           = true
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet.name
+}
+
+resource "aws_db_subnet_group" "db_subnet" {
+  name       = "${var.project_name}-db-subnet"
+  subnet_ids = [aws_subnet.private.id]
+}
+
+# S3 Bucket cho frontend
+resource "aws_s3_bucket" "frontend_bucket" {
+  bucket = "${var.project_name}-frontend"
+  acl    = "public-read"
+}
+
+# CloudFront Distribution
+resource "aws_cloudfront_distribution" "frontend_cf" {
+  origin {
+    domain_name = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
+    origin_id   = "S3-${aws_s3_bucket.frontend_bucket.id}"
+  }
+
+  enabled             = true
+  default_root_object = "index.html"
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "S3-${aws_s3_bucket.frontend_bucket.id}"
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+}
+
+# Amazon MQ (RabbitMQ)
+resource "aws_mq_broker" "rabbitmq" {
+  broker_name        = "${var.project_name}-mq"
+  engine_type        = "RabbitMQ"
+  engine_version     = "3.8.22"
+  host_instance_type = "mq.t3.micro"
+  deployment_mode    = "SINGLE_INSTANCE"
+  publicly_accessible = false
+  user {
+    username = "admin"
+    password = "password123"
+  }
+}
+
+# Route 53 Hosted Zone (giả sử domain đã có)
+resource "aws_route53_zone" "main_zone" {
+  name = "example.com"
+}
+
+# CloudWatch Alarm ví dụ
+resource "aws_cloudwatch_metric_alarm" "cpu_alarm" {
+  alarm_name          = "${var.project_name}-HighCPU"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 80
+  alarm_description   = "This metric monitors EC2 CPU utilization"
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.app_asg.name
+  }
+}
+
+```
