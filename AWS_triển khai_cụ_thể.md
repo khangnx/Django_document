@@ -36,18 +36,27 @@ Auto Scaling Group: Đảm bảo HA
 ```
 
 ## 2. Các dịch vụ AWS cần dùng và giải thích
-```
+
 **EC2 (Elastic Compute Cloud)**: Chạy các instance ứng dụng Laravel + VueJS, cho phép tùy chỉnh môi trường và cấu hình.
+
 **ALB (Application Load Balancer)**: Phân phối traffic giữa 3 instance backend để đảm bảo cân bằng tải và tính sẵn sàng.
+
 **RDS (Relational Database Service)**: Dịch vụ quản lý cơ sở dữ liệu PostgreSQL, hỗ trợ backup, Multi-AZ và bảo mật.
+
 **Amazon MQ hoặc RabbitMQ trên EC2**: Xử lý hàng đợi gửi mail và các tác vụ bất đồng bộ.
+
 **S3 + CloudFront**: Lưu trữ và phân phối static assets của VueJS, tăng tốc độ tải và giảm tải cho backend.
+
 **Amazon SES**: Gửi email với độ tin cậy cao, thay thế việc tự triển khai SMTP.
+
 **Amazon EFS hoặc S3**: Chia sẻ file giữa các instance nếu ứng dụng cần lưu trữ chung.
+
 **Amazon CloudWatch**: Giám sát hiệu năng, thu thập log và thiết lập cảnh báo; có thể kết hợp EventBridge Scheduler cho cronjob.
+
 **Auto Scaling Group**: Tự động scale số lượng EC2 instance khi tải tăng hoặc giảm.
+
 **VPC + Security Groups**: Thiết lập mạng riêng và bảo mật cho các dịch vụ.
-```
+
 
 ## 3. Chi tiết triển khai từng bước (theo cách trả lời chi tiết)
 ### 3.1 Frontend (VueJS)
@@ -65,25 +74,31 @@ npm run build
  - Chọn region.
 - Bật hoặc tắt public access tùy theo CloudFront.
 - Upload file dist.
-** 3. Tạo CloudFront Distribution:Origin: S3 bucket.**
+  
+**3. Tạo CloudFront Distribution:Origin: S3 bucket.**
 - Bật HTTPS.
 - Cấu hình cache policy.
 - Trỏ domain về CloudFront bằng Route 53.
+
 ### 3.2 Backend (Laravel)
 Mục tiêu: Chạy Laravel trên 3 EC2 instance, cân bằng tải bằng ALB.
 Các bước chi tiết:
 
 **1. Tạo VPC với subnet public và private.**
-**2. Tạo Security Group:
+
+**2. Tạo Security Group:**
  - ALB: mở port 80/443.**
  - EC2: chỉ cho phép traffic từ ALB.
-** 3. Tạo Auto Scaling Group:
+   
+**3. Tạo Auto Scaling Group:**
 - Launch Template: EC2 với script cài PHP, Nginx, Laravel.
 - Cài đặt Laravel:Clone code.
 - Cấu hình .env trỏ về RDS và RabbitMQ.
-**4. Tạo ALB:
+  
+**4. Tạo ALB:**
 - Listener: HTTP/HTTPS.**
 - Target Group: EC2 instances.
+  
 ### 3.3 Database (PostgreSQL)
 Mục tiêu: Dùng RDS để quản lý PostgreSQL.
 Các bước chi tiết:
@@ -93,6 +108,7 @@ Các bước chi tiết:
       + Instance type db.t3.medium.
       + Thiết lập backup.
       + Security Group: chỉ cho phép từ EC2.
+        
 ### 3.4 RabbitMQ
 Mục tiêu: Xử lý hàng đợi gửi mail.
 Các bước chi tiết:
