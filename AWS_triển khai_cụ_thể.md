@@ -13,7 +13,7 @@ Tính chi phí ban đầu cho 1 năm sử dụng
 ```
 # 1. Kiến trúc tổng quan
 ## Dự án bao gồm:
-``
+```
 Backend: Laravel
 Frontend: VueJS
 Database: PostgreSQL
