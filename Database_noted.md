@@ -131,7 +131,7 @@ Dùng cho phân tích và báo cáo. Có thể dùng Data Warehouse (như Snowfl
 - Hậu quả: Truy vấn WHERE hoặc ORDER BY rất chậm.
 - Giải pháp: Tạo index cho cột thường dùng trong WHERE, JOIN, ORDER BY.
 
-3 ***Dùng hàm trên cột trong WHERE sẽ làm index mất tác dụng**
+3 ***Dùng hàm trên cột trong WHERE sẽ làm index mất tác dụng***
 
 - Ví dụ: WHERE YEAR(created_at)=2025 → MySQL không dùng index vì phải tính hàm cho từng dòng.
 - Giải pháp: Dùng range: WHERE created_at BETWEEN '2025-01-01' AND '2025-12-31'.
