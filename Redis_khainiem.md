@@ -53,3 +53,21 @@ Redis thường được dùng để **tăng tốc ứng dụng**, **lưu bộ n
 Redis là công cụ mạnh mẽ giúp **tăng hiệu năng**, **giảm tải cơ sở dữ liệu chính**, và **xử lý dữ liệu thời gian thực** hiệu quả.  
 Nó là lựa chọn lý tưởng cho các hệ thống cần tốc độ cao và khả năng mở rộng linh hoạt.
 
+
+# Redis mặc định lưu trữ dữ liệu trong bộ nhớ RAM, nên nếu bạn tắt server hoặc Redis bị dừng đột ngột, thì dữ liệu sẽ bị mất — trừ khi bạn đã cấu hình cơ chế lưu trữ lâu dài (persistence). Redis cung cấp hai cơ chế để tránh mất dữ liệu:
+
+## 🧷 1. RDB (Redis Database Backup)
+- Redis sẽ tự động tạo snapshot (ảnh chụp) của dữ liệu tại các thời điểm nhất định và lưu vào file .rdb.
+- Ưu điểm: nhẹ, nhanh, phù hợp để backup định kỳ.
+- Nhược điểm: nếu Redis bị tắt đột ngột, bạn có thể mất dữ liệu mới nhất chưa được snapshot.
+
+## 📝 2. AOF (Append Only File)
+- Redis sẽ ghi lại mọi lệnh ghi dữ liệu (write command) vào một file log.
+- Khi Redis khởi động lại, nó sẽ phát lại các lệnh này để khôi phục dữ liệu.
+- Ưu điểm: độ an toàn cao hơn, ít mất dữ liệu hơn.
+- Nhược điểm: file log có thể lớn, cần cấu hình để tối ưu hiệu suất.
+
+## 🔧 3. Kết hợp cả RDB và AOF
+Redis cho phép bạn kích hoạt cả hai cơ chế để tận dụng ưu điểm của từng loại: RDB cho backup định kỳ, AOF cho khôi phục chính xác.
+
+
