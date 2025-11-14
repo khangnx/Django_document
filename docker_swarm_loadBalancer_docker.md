@@ -178,3 +178,23 @@ lý và tự phục hồi khi có lỗi.
 
 Docker Swarm giúp quản lý cluster container đơn giản, gọn nhẹ, phù hợp
 với hệ thống có quy mô vừa đến trung bình.
+
+# 🔁 Luồng hoạt động **đầy đủ có Docker Swarm**
+
+    Client
+      ↓
+    AWS Application Load Balancer
+      ↓
+    Forward đến bất kỳ EC2 Node (Manager/Worker)
+      ↓
+    Docker Swarm Ingress Routing Mesh
+      ↓
+    Nginx Service (nhiều replica)
+      ↓
+    Docker Swarm internal load balancing
+      ↓
+    Rails Service (nhiều replica)
+      ↓
+    Rails → RDS / Redis / S3
+      ↓
+    Response → Client
