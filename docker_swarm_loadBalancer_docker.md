@@ -102,3 +102,79 @@ networks:
   appnet:
     driver: overlay
 ```
+# Docker Swarm đóng vai trò gì?
+
+Docker Swarm **không xử lý request trực tiếp từ client**, mà là
+**orchestrator điều phối container**, tương tự Kubernetes.\
+Nó đảm bảo toàn bộ hệ thống container hoạt động ổn định, phân phối hợp
+lý và tự phục hồi khi có lỗi.
+
+------------------------------------------------------------------------
+
+## 1️⃣ Scheduling (Phân phối container)
+
+-   Khi chạy `docker stack deploy`, Swarm quyết định container nằm ở EC2
+    node nào.
+-   Đảm bảo đúng số lượng replica.
+-   Tự khởi động lại container khi lỗi.
+-   Khi một node chết → tự reschedule container sang node còn sống.
+
+------------------------------------------------------------------------
+
+## 2️⃣ Service Discovery
+
+-   Swarm tự tạo DNS nội bộ cho mỗi service.
+-   Ứng dụng có thể gọi nhau qua tên "service name", không cần IP.
+-   Giúp Rails ↔ Redis ↔ Nginx ↔ Sidekiq giao tiếp dễ dàng.
+
+------------------------------------------------------------------------
+
+## 3️⃣ Internal Load Balancing (Routing Mesh)
+
+-   Khi một request đi vào service `web`, Swarm phân phối request đều
+    giữa:
+    -   rails-1
+    -   rails-2
+    -   rails-3
+-   Không cần cài thêm load balancer nội bộ.
+
+------------------------------------------------------------------------
+
+## 4️⃣ Overlay Network (VXLAN)
+
+-   Tạo mạng ảo giúp container giữa các EC2 giao tiếp như cùng LAN.
+-   Không cần mở từng port thủ công giữa EC2 nodes.
+-   Đảm bảo bảo mật và routing nội bộ tự động.
+
+------------------------------------------------------------------------
+
+## 5️⃣ Auto Healing
+
+-   Container chết → Swarm tự restart.
+-   Node chết → Swarm tự chạy container ở node khác.
+-   Đảm bảo hệ thống luôn hoạt động ổn định.
+
+------------------------------------------------------------------------
+
+## 6️⃣ Rolling Updates & Rollback
+
+-   Khi chạy `docker service update`, Swarm cập nhật từng container theo
+    batch.
+-   Nếu phiên bản mới lỗi → tự rollback về phiên bản trước.
+-   Tránh downtime khi deploy.
+
+------------------------------------------------------------------------
+
+## 🎯 Tóm tắt vai trò của Docker Swarm
+
+  Thành phần              Vai trò
+  ----------------------- ------------------------------
+  **Scheduler**           Phân phối container vào node
+  **Overlay Network**     Kết nối container đa node
+  **Routing Mesh**        Load balancing nội bộ
+  **Service Discovery**   DNS nội bộ cho services
+  **Auto Healing**        Tự phục hồi khi lỗi
+  **Rolling Update**      Cập nhật không downtime
+
+Docker Swarm giúp quản lý cluster container đơn giản, gọn nhẹ, phù hợp
+với hệ thống có quy mô vừa đến trung bình.
