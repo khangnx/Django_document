@@ -56,3 +56,55 @@ OWASP Top 10 là danh sách các mối đe dọa bảo mật phổ biến nhất
   - Phân tích
   - Khắc phục
   - Báo cáo
+ 
+
+# 🔐 Nguyên tắc bảo vệ dữ liệu trong lập trình web
+
+## 1. Nguyên tắc cốt lõi theo GDPR
+
+- **Tính hợp pháp, công bằng và minh bạch**  
+  Dữ liệu cá nhân phải được xử lý một cách hợp pháp, công bằng và minh bạch với người dùng.
+
+- **Giới hạn mục đích**  
+  Chỉ thu thập và xử lý dữ liệu cho các mục đích cụ thể, rõ ràng và hợp pháp.
+
+- **Tối thiểu hóa dữ liệu**  
+  Chỉ thu thập những dữ liệu cần thiết cho mục đích đã định.
+
+- **Đảm bảo tính chính xác**  
+  Dữ liệu phải được cập nhật và chính xác. Người dùng có quyền yêu cầu chỉnh sửa.
+
+- **Giới hạn thời gian lưu trữ**  
+  Không lưu trữ dữ liệu cá nhân lâu hơn mức cần thiết.
+
+- **Bảo mật và toàn vẹn**  
+  Dữ liệu phải được bảo vệ khỏi truy cập trái phép, mất mát hoặc phá hoại.
+
+- **Trách nhiệm giải trình**  
+  Tổ chức phải chứng minh được việc tuân thủ các nguyên tắc bảo vệ dữ liệu.
+
+---
+
+## 2. Thực hành bảo vệ dữ liệu trong lập trình web
+
+- ✅ Sử dụng HTTPS và mã hóa dữ liệu khi truyền tải.
+- ✅ Hash mật khẩu với thuật toán mạnh như bcrypt hoặc Argon2.
+- ✅ Áp dụng xác thực đa yếu tố (MFA) và phân quyền truy cập.
+- ✅ Thiết kế hệ thống theo nguyên tắc "Privacy by Design".
+- ✅ Cung cấp chức năng cho người dùng xem, tải xuống hoặc xóa dữ liệu cá nhân.
+- ✅ Ghi log truy cập và giám sát hành vi bất thường.
+
+---
+
+## 3. Đạo đức trong bảo vệ dữ liệu
+
+- 🤝 Không thu thập dữ liệu quá mức chỉ vì có thể.
+- 🤝 Tôn trọng quyền riêng tư của người dùng, kể cả khi không bị ràng buộc pháp lý.
+- 🤝 Không sử dụng dữ liệu để thao túng hành vi hoặc gây hại cho người dùng.
+
+---
+
+## 📌 Ghi nhớ
+
+> “Bảo vệ dữ liệu không chỉ là tuân thủ pháp luật, mà còn là trách nhiệm đạo đức của lập trình viên.”
+
