@@ -108,3 +108,12 @@ OWASP Top 10 là danh sách các mối đe dọa bảo mật phổ biến nhất
 
 > “Bảo vệ dữ liệu không chỉ là tuân thủ pháp luật, mà còn là trách nhiệm đạo đức của lập trình viên.”
 
+# Giải thích về tổ chức GDPR
+GDPR là viết tắt của General Data Protection Regulation, tức là Quy định chung về bảo vệ dữ liệu.
+Đây là một bộ luật của Liên minh Châu Âu (EU) được ban hành nhằm:
+- Bảo vệ quyền riêng tư và dữ liệu cá nhân của công dân EU.
+- Tăng cường quyền kiểm soát của cá nhân đối với dữ liệu của họ.
+- Áp dụng cho tất cả các tổ chức xử lý dữ liệu cá nhân của công dân EU, bất kể tổ chức đó đặt trụ sở ở đâu.
+GDPR có hiệu lực từ ngày 25 tháng 5 năm 2018 và là một trong những tiêu chuẩn nghiêm ngặt nhất thế giới về bảo vệ dữ liệu cá nhân.
+
+
