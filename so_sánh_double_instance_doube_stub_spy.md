@@ -116,3 +116,96 @@ user = spy("User")
 user.name("Alice")
 expect(user).to have_received(:name).with("Alice")
 ```
+
+```
+Trong RSpec, “tạo spy API” nghĩa là giám sát (track) lời gọi API xem:
+
+method có được gọi không,
+
+được gọi bao nhiêu lần,
+
+được gọi với tham số gì.
+
+Spy khác stub:
+
+Stub → thay thế kết quả trả về.
+
+Spy → theo dõi xem method đã được gọi hay chưa (có thể kèm stub hoặc không).
+
+✅ 1. Spy trong RSpec là gì?
+
+spy trong RSpec là một test double có khả năng ghi nhận lại lời gọi method.
+
+Dùng để kiểm tra side effects hoặc logic điều hướng.
+
+✅ 2. Ví dụ đơn giản (không dùng API thật)
+Code:
+class Notifier
+  def self.send_request
+    HTTParty.get("https://api.example.com/ping")
+  end
+end
+
+Spy API call:
+RSpec.describe Notifier do
+  it "calls the API" do
+    # tạo spy cho HTTParty
+    api_spy = spy("HTTParty")
+
+    # thay thế HTTParty bằng spy
+    stub_const("HTTParty", api_spy)
+
+    Notifier.send_request
+
+    expect(api_spy).to have_received(:get)
+      .with("https://api.example.com/ping")
+  end
+end
+
+
+Ý nghĩa:
+
+Không quan tâm kết quả API trả về
+
+Chỉ xác nhận API đã được gọi đúng URL
+
+✅ 3. Spy + Stub API cùng lúc
+
+Dùng khi bạn muốn vừa theo dõi, vừa trả về fake data.
+
+api_spy = spy("HTTParty", get: { "status" => "ok" })
+
+stub_const("HTTParty", api_spy)
+
+Notifier.send_request
+
+expect(api_spy).to have_received(:get)
+
+✅ 4. Spy kiểu RSpec built-in (không dùng stub_const)
+
+Bạn có thể spy trực tiếp trên object thật:
+
+RSpec.describe Notifier do
+  it "calls external API" do
+    allow(HTTParty).to receive(:get).and_call_original # hoặc .and_return(data giả)
+
+    Notifier.send_request
+
+    expect(HTTParty).to have_received(:get)
+      .with("https://api.example.com/ping")
+  end
+end
+
+
+have_received chỉ dùng sau khi method đã được gọi.
+
+🔥 5. Spy khác WebMock kiểu nào?
+Phương pháp	Dùng để	Theo dõi call?	Chặn API thật?
+Stub (allow)	Trả về fake data	❌	✔️
+Spy (have_received)	Kiểm tra method có gọi không	✔️	❌/✔️ (tuỳ stub)
+WebMock	Chặn và mô phỏng HTTP	✔️	✔️
+📌 Kết luận ngắn
+
+Spy API trong RSpec = tạo test double để theo dõi xem API được gọi ra sao.
+Thường dùng để kiểm tra logic “có gọi API hay không” hơn là nội dung trả về.
+```
