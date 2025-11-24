@@ -71,3 +71,66 @@ Nó là lựa chọn lý tưởng cho các hệ thống cần tốc độ cao v�
 Redis cho phép bạn kích hoạt cả hai cơ chế để tận dụng ưu điểm của từng loại: RDB cho backup định kỳ, AOF cho khôi phục chính xác.
 
 
+# Ngắn gọn:
+## ❌ Redis không cache HTML/CSS/JS ở client (trình duyệt).
+## ✔️ Redis chỉ cache ở server-side, để backend trả dữ liệu nhanh hơn.
+
+```Giải thích chi tiết
+1. Redis làm được gì?
+
+Redis là in-memory database/cache dùng trên server. Nó dùng để cache:
+
+Kết quả query database
+
+API response
+
+Session
+
+Token
+
+Các object JSON, string, list, set...
+
+Redis không gửi trực tiếp HTML/CSS/JS xuống trình duyệt để client tự cache.
+
+2. Cache HTML/CSS/JS ở client là do ai?
+
+Đó là nhiệm vụ của:
+
+-- ✔ HTTP Cache (Client-Side Cache)
+
+Trình duyệt lưu file HTML/CSS/JS dựa vào header:
+
+Cache-Control
+
+ETag
+
+Last-Modified
+
+Expires
+
+Ví dụ: server gửi header:
+
+Cache-Control: public, max-age=31536000
+
+
+→ trình duyệt lưu file JS/CSS trong 1 năm.
+
+Redis không tham gia phần này.
+
+3. Vậy Redis có liên quan không?
+
+Redis có thể cache HTML đã render sẵn trên server để trả về nhanh hơn.
+
+Ví dụ backend:
+
+Render ra HTML ⇒ lưu vào Redis ⇒ trả nhanh cho client.
+
+Nhưng trình duyệt vẫn cache theo HTTP headers, không phải Redis.
+
+Kết luận
+Mục đích	                                          Redis có hỗ trợ?
+Cache dữ liệu backend	                                 ✔ Có
+Cache HTML đã render ở server	                         ✔ Có
+Cache file HTML/CSS/JS tại trình duyệt	              ❌ Không
+Thay thế CDN	                                        ❌ Không
+```
