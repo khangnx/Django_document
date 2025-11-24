@@ -134,3 +134,53 @@ Cache HTML đã render ở server	                         ✔ Có
 Cache file HTML/CSS/JS tại trình duyệt	              ❌ Không
 Thay thế CDN	                                        ❌ Không
 ```
+
+**Memcached cũng giống Redis ở điểm này:**  
+❌ *Không cache HTML/CSS/JS ở **client (browser)**.*  
+✔️ *Chỉ cache ở **server-side** để backend lấy dữ liệu nhanh hơn.*
+
+---
+
+## **1. Memcached làm được gì?**
+- Cache key–value đơn giản (string, serialized object)  
+- Tăng tốc backend, giảm tải database  
+- Lưu phiên (session)  
+- Cache API response  
+
+Memcached **không thể** điều khiển cache trên trình duyệt.
+
+---
+
+## **2. Cache HTML/CSS/JS ở client là nhiệm vụ của…?**
+**HTTP Cache + CDN + Web Server (Nginx/Apache)**  
+Trình duyệt cache file static nhờ các header:
+
+## **3. Memcached có liên quan không?**
+Có thể dùng Memcached để cache:
+
+- HTML đã render sẵn  
+- Kết quả template engine  
+- Fragment cache  
+
+→ Vẫn là **server-side**, không phải browser cache.
+
+---
+
+## **4. So sánh nhanh Redis vs Memcached**
+| Tính năng | Redis | Memcached |
+|----------|--------|-----------|
+| Cache server-side | ✔ | ✔ |
+| Cache client-side (browser) | ❌ | ❌ |
+| Data type | Nhiều | Chỉ key-value |
+| Persistence (lưu file) | ✔ | ❌ |
+| Pub/Sub | ✔ | ❌ |
+
+---
+
+## **Kết luận**
+Redis ❌  
+Memcached ❌  
+
+👉 **Không công nghệ cache nào ở backend có thể tự động cache HTML/CSS/JS ở client.**  
+👉 Browser chỉ nhận cache thông qua *HTTP headers* hoặc *CDN*.
+
