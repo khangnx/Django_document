@@ -96,24 +96,16 @@ File cấu hình chính: `buildspec.yml`.
   -----------------------------------------------------------------------
   Tiêu chí       AWS CodeBuild             AWS CodePipeline
   -------------- ------------------------- ------------------------------
-  Vai trò        Build & test code         Tự động hóa CI/CD
-
-  Làm được gì    Build, test, tạo artifact Điều phối các bước build,
-                                           test, deploy
-
-  Tự chạy được?  ✔️ Có                     ❌ Không (cần CodeBuild để
-                                           build)
-
-  File config    buildspec.yml             Pipeline JSON/YAML
-
-  Loại dịch vụ   Compute (build server)    Orchestration (CI/CD workflow)
-
-  Hỗ trợ Docker  ✔️ Build image            ❌ Không build được
-
-  Thường dùng    Build app, unit test      CI/CD end-to-end
-  cho                                      
-  -----------------------------------------------------------------------
-
+| Tiêu chí | AWS CodeBuild | AWS CodePipeline |
+|---------|----------------|-------------------|
+| Vai trò | Build & test code | Tự động hóa CI/CD |
+| Làm được gì | Build, test, tạo artifact | Điều phối các bước build, test, deploy |
+| Tự chạy được? | ✔️ Có | ❌ Không (cần CodeBuild để build) |
+| File config | buildspec.yml | Pipeline JSON/YAML |
+| Loại dịch vụ | Compute (build server) | Orchestration (CI/CD workflow) |
+| Hỗ trợ Docker | ✔️ Build image | ❌ Không build được |
+| Thường dùng cho | Build app, unit test | CI/CD end-to-end |
+                                   
 ------------------------------------------------------------------------
 
 ## 4. Khi nào dùng dịch vụ nào?
