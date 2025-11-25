@@ -14,29 +14,22 @@ REST API (Representational State Transfer) là một phong cách kiến trúc ch
 
 ## 2. gRPC API là gì?
 
-gRPC (Google Remote Procedure Call) là một framework RPC hiệu năng cao, sử dụng HTTP/2 và Protocol Buffers để truyền dữ liệu nhị phân. gRPC hỗ trợ streaming hai chiều và đa ngôn ngữ.
-
+gRPC (viết tắt của google Remote Procedure Call) là một framework gọi hàm từ xa (Remote Procedure Call), cho phép một ứng dụng gọi trực tiếp các hàm/method trên một ứng dụng khác, bất kể chúng đang chạy trên máy chủ nào hoặc ngôn ngữ lập trình gì.
 Đặc điểm chính:
 - Hiệu năng cao nhờ HTTP/2 và Protobuf.
 - Hỗ trợ streaming (client, server, bidirectional).
 - Tự động sinh code client/server từ file `.proto`.
 - Phù hợp cho microservices và hệ thống phân tán.
 
-```
-gRPC API là gì?
 
-gRPC (viết tắt của google Remote Procedure Call) là một framework gọi hàm từ xa (Remote Procedure Call), cho phép một ứng dụng gọi trực tiếp các hàm/method trên một ứng dụng khác, bất kể chúng đang chạy trên máy chủ nào hoặc ngôn ngữ lập trình gì.
-
-Điểm nổi bật: nó không dựa trên REST hay HTTP truyền thống, mà sử dụng HTTP/2 và Protocol Buffers (protobuf) để truyền dữ liệu, giúp tăng tốc, tiết kiệm băng thông và hỗ trợ streaming dữ liệu.
-
-1. Các thành phần chính của gRPC
+# 1. Các thành phần chính của gRPC
 
 Service Definition (Định nghĩa service)
 
 Được viết bằng Protocol Buffers (.proto files).
 
 Xác định các hàm (methods) mà service cung cấp, cùng với request/response.
-
+```
 Ví dụ:
 
 syntax = "proto3";
@@ -54,7 +47,7 @@ message HelloReply {
   string message = 1;
 }
 
-
+```
 Ở ví dụ trên, service Greeter có 1 hàm SayHello, nhận HelloRequest và trả về HelloReply.
 
 Client và Server
@@ -73,23 +66,23 @@ gRPC dùng protobuf để encode/decode dữ liệu.
 
 Tốc độ cao và nhẹ hơn JSON/ XML truyền thống.
 
-2. Các loại RPC trong gRPC
+# 2. Các loại RPC trong gRPC
 
-Unary RPC (gọi 1 request – nhận 1 response)
+1. Unary RPC (gọi 1 request – nhận 1 response)
 
-Client: SayHello(request) → Server: trả về 1 response.
+  Client: SayHello(request) → Server: trả về 1 response.
 
-Server streaming RPC
+2. Server streaming RPC
 
-Client gửi 1 request → Server trả về stream nhiều response.
+  Client gửi 1 request → Server trả về stream nhiều response.
 
-Client streaming RPC
+3. Client streaming RPC
 
-Client gửi nhiều request → Server trả về 1 response sau khi nhận xong.
+  Client gửi nhiều request → Server trả về 1 response sau khi nhận xong.
 
-Bidirectional streaming RPC
+4. Bidirectional streaming RPC
 
-Client và server gửi nhiều message qua lại đồng thời.
+  Client và server gửi nhiều message qua lại đồng thời.
 
 3. Ưu điểm của gRPC so với REST
 Điểm	gRPC	REST/HTTP
@@ -98,7 +91,7 @@ Streaming	Hỗ trợ streaming 2 chiều	Khó, phải dùng WebSocket
 Hợp ngôn ngữ	Hỗ trợ nhiều ngôn ngữ (Java, Python, Go, C#, NodeJS…)	REST cũng đa ngôn ngữ
 Contract	Chặt chẽ với .proto	Lỏng lẻo, thường dựa trên JSON Schema
 4. Ví dụ minh họa (Python)
-
+```
 server.py
 
 import grpc
@@ -120,9 +113,9 @@ server.start()
 print("Server running on port 50051...")
 server.wait_for_termination()
 
-
+```
 client.py
-
+```
 import grpc
 import helloworld_pb2
 import helloworld_pb2_grpc
@@ -132,19 +125,8 @@ stub = helloworld_pb2_grpc.GreeterStub(channel)
 
 response = stub.SayHello(helloworld_pb2.HelloRequest(name='Khang'))
 print(response.message)  # Output: Hello Khang
-
-5. Khi nào nên dùng gRPC?
-
-Ứng dụng microservices: cần kết nối nhanh, nhẹ giữa các service.
-
-Streaming dữ liệu: video, log, chat real-time.
-
-Nơi cần hiệu năng cao hơn REST (thời gian phản hồi, băng thông hạn chế).
-
-Khi muốn hợp đồng dữ liệu chặt chẽ (dùng protobuf).
-
-Nếu bạn muốn, tôi có thể vẽ 1 sơ đồ minh họa toàn bộ luồng gRPC Client → Server → Response,
 ```
+
 ## 3. Khi nào dùng REST API?
 - Ứng dụng web hoặc mobile cần tương thích rộng rãi.
 - Giao tiếp với bên thứ ba (public APIs).
@@ -153,7 +135,7 @@ Nếu bạn muốn, tôi có thể vẽ 1 sơ đồ minh họa toàn bộ luồn
 
 ## 4. Khi nào dùng gRPC API?
 - Hệ thống microservices cần hiệu năng cao.
-- Truyền dữ liệu lớn hoặc streaming thời gian thực.
+- Streaming dữ liệu: video, log, chat real-time.
 - Giao tiếp nội bộ giữa các dịch vụ.
 - Yêu cầu giảm độ trễ và tiết kiệm băng thông.
 
