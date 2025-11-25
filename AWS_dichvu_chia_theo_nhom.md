@@ -134,7 +134,106 @@ File cấu hình chính: `buildspec.yml`.
           ↓
     Notify (SNS/Slack)
 
+# AWS CodeDeploy - Giải thích chi tiết
 
+## 🌟 AWS CodeDeploy là gì?
+**CodeDeploy** là dịch vụ **triển khai ứng dụng tự động (Application Deployment Service)** của AWS.  
+Nó giúp bạn:
+- Tự động triển khai code lên server/instances/containers  
+- Giảm rủi ro khi deploy thủ công  
+- Hỗ trợ **EC2, Lambda, ECS**  
+- Hỗ trợ triển khai **Blue/Green** hoặc **In-place**  
+
+> “CodeDeploy = tự động đưa code từ repository lên môi trường chạy thật, an toàn và có rollback nếu gặp lỗi.”
+
+---
+
+## ⚙️ 2. CodeDeploy làm gì?
+
+### 2.1 Triển khai code tự động
+- Lấy code từ: **GitHub, CodeCommit, S3**  
+- Triển khai lên:
+  - **EC2 / On-premise server** (có agent)  
+  - **ECS (containers)**  
+  - **AWS Lambda**  
+
+### 2.2 Hỗ trợ nhiều chiến lược triển khai
+
+#### 1️⃣ In-place deployment
+- Cập nhật trực tiếp ứng dụng trên server đang chạy  
+- Server dừng service, update code, restart  
+- Ưu điểm: đơn giản, nhanh  
+- Nhược điểm: downtime tồn tại
+
+#### 2️⃣ Blue/Green deployment
+- Tạo môi trường mới (Green) → triển khai code mới  
+- Kiểm tra, test → chuyển traffic từ môi trường cũ (Blue) sang mới  
+- Ưu điểm: Không downtime, dễ rollback  
+- Nhược điểm: tốn thêm resource (2 môi trường)
+
+### 2.3 Rollback tự động
+- Nếu deployment fail → CodeDeploy có thể rollback về version trước  
+- Giảm thiểu rủi ro downtime
+
+### 2.4 Quản lý ứng dụng và version
+- Mỗi release có **revision** (code + scripts + config)  
+- CodeDeploy lưu lại lịch sử triển khai  
+- Dễ kiểm tra và audit
+
+### 2.5 Hooks / Scripts trước và sau deployment
+Bạn có thể:
+- Chạy script trước khi deploy (**BeforeInstall**)  
+- Chạy script sau khi deploy (**AfterInstall, ApplicationStart**)  
+- Ví dụ: migrate database, copy file, restart service
+
+---
+
+## 🛠️ 3. Cách CodeDeploy hoạt động
+1. Tạo **Application** trong CodeDeploy  
+2. Tạo **Deployment Group** (gồm target server / ECS / Lambda)  
+3. Tạo **Revision** (code + appspec.yml + scripts)  
+4. Bắt đầu **Deployment**  
+5. CodeDeploy chạy theo hooks + chiến lược triển khai  
+6. Giám sát và rollback nếu gặp lỗi  
+
+---
+
+## 📦 4. File cấu hình CodeDeploy: appspec.yml
+- Đây là file YAML định nghĩa cách deploy và scripts:
+
+```yaml
+version: 0.0
+os: linux
+files:
+  - source: /app
+    destination: /var/www/html
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/restart_service.sh
+      timeout: 300
+      runas: root
+```
+
+---
+
+## 🔑 5. Lợi ích chính của CodeDeploy
+- Tự động hóa deploy → giảm lỗi con người  
+- Rollback khi deploy lỗi → an toàn  
+- Hỗ trợ nhiều loại môi trường: EC2, Lambda, ECS  
+- Triển khai theo nhiều chiến lược: in-place / blue-green  
+- Giám sát và audit deployment dễ dàng
+
+---
+
+## 💡 6. Khi nào dùng CodeDeploy
+- Có nhiều server EC2 cần deploy cùng lúc  
+- Muốn deploy container lên ECS tự động  
+- Muốn deploy Lambda function  
+- Muốn CI/CD tự động, kết hợp CodePipeline + CodeBuild + CodeDeploy  
 
 
 ## 7. Monitoring & Logging
