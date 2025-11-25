@@ -53,6 +53,98 @@
 | CodeDeploy | Deployment cho EC2 / ECS. |
 | Cloud9 | Web IDE. |
 
+
+# So sánh AWS CodeBuild và AWS CodePipeline
+
+## 🎯 Tóm tắt
+
+-   **CodeBuild = Công cụ build code (CI).**\
+-   **CodePipeline = Công cụ tự động hóa toàn bộ CI/CD.**
+
+------------------------------------------------------------------------
+
+## 1. CodeBuild là gì?
+
+**CodeBuild** là dịch vụ chuyên dùng để:
+
+-   Build code\
+-   Chạy unit test\
+-   Tạo artifact (zip, jar, docker image...)\
+-   Push image lên ECR\
+-   Không cần server, auto scale
+
+File cấu hình chính: `buildspec.yml`.
+
+------------------------------------------------------------------------
+
+## 2. CodePipeline là gì?
+
+**CodePipeline** là dịch vụ điều phối (orchestrator) giúp tự động hóa:
+
+-   Lấy source\
+-   Build (gọi CodeBuild)\
+-   Test\
+-   Deploy (Lambda, EC2, ECS...)\
+-   Manual approval
+
+**CodePipeline không build**, nó chỉ sắp xếp các bước.
+
+------------------------------------------------------------------------
+
+## 3. Bảng so sánh CodeBuild vs CodePipeline
+
+  -----------------------------------------------------------------------
+  Tiêu chí       AWS CodeBuild             AWS CodePipeline
+  -------------- ------------------------- ------------------------------
+  Vai trò        Build & test code         Tự động hóa CI/CD
+
+  Làm được gì    Build, test, tạo artifact Điều phối các bước build,
+                                           test, deploy
+
+  Tự chạy được?  ✔️ Có                     ❌ Không (cần CodeBuild để
+                                           build)
+
+  File config    buildspec.yml             Pipeline JSON/YAML
+
+  Loại dịch vụ   Compute (build server)    Orchestration (CI/CD workflow)
+
+  Hỗ trợ Docker  ✔️ Build image            ❌ Không build được
+
+  Thường dùng    Build app, unit test      CI/CD end-to-end
+  cho                                      
+  -----------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+## 4. Khi nào dùng dịch vụ nào?
+
+### ✔️ Dùng CodeBuild khi:
+
+-   Bạn chỉ cần build/test\
+-   Dùng GitHub Actions/GitLab CI gọi CodeBuild\
+-   Không cần deploy tự động
+
+### ✔️ Dùng CodePipeline khi:
+
+-   Cần CI/CD đầy đủ\
+-   Deploy tự động khi có commit\
+-   Cần quy trình review, approve
+
+------------------------------------------------------------------------
+
+## 5. Ví dụ flow CI/CD tiêu chuẩn AWS
+
+    Source (GitHub)
+          ↓
+    Build (CodeBuild)
+          ↓
+    Deploy (CodeDeploy / ECS / Lambda)
+          ↓
+    Notify (SNS/Slack)
+
+
+
+
 ## 7. Monitoring & Logging
 | Dịch vụ | Mô tả |
 |--------|-------|
