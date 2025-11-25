@@ -52,17 +52,17 @@ message HelloReply {
 
 Client và Server
 
-  Server: triển khai các method được định nghĩa trong .proto.
+  - Server: triển khai các method được định nghĩa trong .proto.
 
-  Client: gọi các method đó như gọi hàm local.
+ - Client: gọi các method đó như gọi hàm local.
 
 Transport Layer (HTTP/2)
 
-  gRPC sử dụng HTTP/2 để truyền dữ liệu, hỗ trợ multiplexing, streaming, header compression → nhanh hơn REST/HTTP 1.1.
+  - gRPC sử dụng HTTP/2 để truyền dữ liệu, hỗ trợ multiplexing, streaming, header compression → nhanh hơn REST/HTTP 1.1.
 
 Serialization (Protocol Buffers)
 
-  gRPC dùng protobuf để encode/decode dữ liệu.
+  - gRPC dùng protobuf để encode/decode dữ liệu.
 
 Tốc độ cao và nhẹ hơn JSON/ XML truyền thống.
 
