@@ -86,7 +86,7 @@ Công cụ: - Cumulative Flow Diagram\
 
 # PHẦN 4 --- Best Practices cho Leader
 
--   Đặt WIP limit.\
+-   Đặt WIP limit.\(Work In Progress limit)
 -   Chia nhỏ task \> 2--3 ngày.\
 -   Một người chỉ có 1 task In Progress.\
 -   Minh bạch trên board.\
