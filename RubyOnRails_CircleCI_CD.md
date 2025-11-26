@@ -150,3 +150,62 @@ Bạn đã có:
 - Hướng tùy chỉnh thêm Redis, SQLite, lint tools,...
 
 Bạn có thể điều chỉnh theo version Ruby/Rails hoặc CI workflow riêng.
+
+
+
+# CircleCI + GitHub hoàn toàn có thể chạy các test UI sử dụng Chrome + Selenium (hoặc Chromedriver) và Headless Chrome (Silicon hay Chromium headless) để test giao diện web.
+
+## Giải thích chi tiết:
+
+### CircleCI tích hợp với GitHub
+
+ - Bạn push code lên GitHub → CircleCI sẽ trigger pipeline tự động.
+
+- CircleCI có thể chạy container (Docker) hoặc VM Linux/Windows/macOS để thực hiện job.
+
+### Chrome / Chromium / Headless
+
+- Trên CircleCI, bạn có thể cài Chrome hoặc Chromium headless.
+
+- Selenium hoặc Puppeteer có thể kết nối để chạy các test UI.
+
+### Ví dụ config .circleci/config.yml cho UI test với Chrome
+```
+version: 2.1
+jobs:
+  test-ui:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y unzip xvfb libxi6 libgconf-2-4
+            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+      - run:
+          name: Run Selenium tests
+          command: |
+            xvfb-run -a npm run test-ui
+workflows:
+  version: 2
+  ui-tests:
+    jobs:
+      - test-ui
+
+```
+ - xvfb-run giúp chạy Chrome headless trên môi trường Linux không có GUI.
+
+- Nếu bạn dùng macOS executor trên CircleCI, bạn có thể chạy Chrome trực tiếp, hỗ trợ Apple Silicon nếu cần test trên macOS.
+
+### Các lưu ý
+
+- Phiên bản Chrome / ChromeDriver phải tương thích.
+
+- Nếu dùng container Linux, cần cài thêm các thư viện phụ trợ (libnss3, libxss1, …) để Chrome chạy headless.
+
+- CircleCI hỗ trợ Docker, Windows, macOS executor → bạn có thể test UI trên nhiều nền tảng.
+
+## ✅ Kết luận: CircleCI + GitHub hoàn toàn hỗ trợ test UI với Chrome/Selenium/Headless Chrome, kể cả môi trường headless hoặc Apple Silicon.
