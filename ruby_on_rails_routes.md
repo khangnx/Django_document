@@ -211,3 +211,139 @@ Tạo đường dẫn: /admin/users
 Tên route: users_path (không có tiền tố admin_)
 Controller: UsersController (không phải Admin::UsersController)
 ```
+
+
+# Collection và Member trong Rails Routes
+
+## 1. Khái niệm tổng quan
+
+Trong Ruby on Rails, khi sử dụng `resources`, bạn có thể thêm các action
+mở rộng ngoài 7 action REST mặc định bằng hai kiểu:
+
+-   **member**
+-   **collection**
+
+Chúng khác nhau ở việc **có bao gồm `:id` trong URL hay không**.
+
+------------------------------------------------------------------------
+
+## 2. MEMBER --- Route dành cho một phần tử cụ thể
+
+### ✔ Đặc điểm
+
+-   Luôn tạo URL dạng: `/resources/:id/action`
+-   Áp dụng cho **một object duy nhất**
+-   Dùng khi action yêu cầu `id`
+
+### Ví dụ
+
+``` ruby
+resources :users do
+  member do
+    get :profile
+    post :ban
+  end
+end
+```
+
+### Routes sinh ra
+
+  HTTP   URL                  Controller#Action   Ý nghĩa
+  ------ -------------------- ------------------- --------------------
+  GET    /users/:id/profile   users#profile       xem profile 1 user
+  POST   /users/:id/ban       users#ban           khóa 1 user
+
+### Cách gọi URL helper
+
+``` ruby
+profile_user_path(@user)
+ban_user_path(@user)
+```
+
+------------------------------------------------------------------------
+
+## 3. COLLECTION --- Route dành cho danh sách
+
+### ✔ Đặc điểm
+
+-   Không có `id` → URL dạng: `/resources/action`
+-   Áp dụng cho **danh sách / nhiều object**
+-   Dùng khi action không cần `id`
+
+### Ví dụ
+
+``` ruby
+resources :users do
+  collection do
+    get :active
+    get :search
+  end
+end
+```
+
+### Routes sinh ra
+
+  HTTP   URL             Controller#Action   Ý nghĩa
+  ------ --------------- ------------------- ----------------------------
+  GET    /users/active   users#active        danh sách user đang active
+  GET    /users/search   users#search        tìm user
+
+### Cách gọi URL helper
+
+``` ruby
+active_users_path
+search_users_path
+```
+
+------------------------------------------------------------------------
+
+## 4. So sánh nhanh
+
+  --------------------------------------------------------------------------------------------
+  Loại             URL pattern               Có `:id`?      Dùng cho      Ví dụ route
+  ---------------- ------------------------- -------------- ------------- --------------------
+  **member**       `/resources/:id/action`   ✔ Có           Một phần tử   `/users/5/profile`
+
+  **collection**   `/resources/action`       ✖ Không        Danh sách     `/users/search`
+  --------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+## 5. Cách viết rút gọn
+
+### Member rút gọn
+
+``` ruby
+get :profile, on: :member
+```
+
+### Collection rút gọn
+
+``` ruby
+get :search, on: :collection
+```
+
+------------------------------------------------------------------------
+
+## 6. Ví dụ thực tế
+
+``` ruby
+resources :products do
+  member do
+    post :publish
+    get  :preview
+  end
+
+  collection do
+    get :search
+    get :top_selling
+  end
+end
+```
+
+------------------------------------------------------------------------
+
+## 7. Kết luận
+
+-   **member** → route dành cho **1 item**, có `:id`
+-   **collection** → route dành cho **list items**, không có `:id`
