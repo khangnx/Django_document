@@ -266,4 +266,6 @@ User                   Vue.js SPA             AWS Cognito                Rails A
  |                         |                                                     |
 
 ```
+<img width="677" height="673" alt="image" src="https://github.com/user-attachments/assets/13eb2f42-c8df-4656-944d-8788bf51d0ad" />
+
 
