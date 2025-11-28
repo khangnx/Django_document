@@ -233,3 +233,35 @@ async function getProfile() {
 # ✔ Kết luận
 
 Tài liệu này giúp bạn triển khai SSO đầy đủ giữa AWS Cognito, Ruby on Rails và Vue.js.
+
+# Flow tổng quan dưới dạng Sequence Diagram (ASCII)
+
+User                   Vue.js SPA             AWS Cognito                Rails API
+ |                         |                      |                         |
+ |--- Truy cập App ------->|                      |                         |
+ |                         |                      |                         |
+ |--- Nhấn "Login" ------->|                      |                         |
+ |                         |--- Redirect -------->|                         |
+ |                         |   đến Hosted UI      |                         |
+ |                         |                      |                         |
+ |<------ Hiện UI Login (Username/Password) -----|                         |
+ |                         |                      |                         |
+ |--- Nhập thông tin ------>                      |                         |
+ |                         |--- Authenticate ---->|                         |
+ |                         |                      |--- Xác thực ---------->|
+ |                         |                      |                         |
+ |                         |<---- Redirect callback + Code -----------------|
+ |                         |                      |                         |
+ |--- Frontend gửi Code -> |                      |                         |
+ |                         |--- POST /oauth2/token ------------------------>|
+ |                         |                      |--- Verify Client ------|
+ |                         |                      |--- Trả về JWT Token --->|
+ |                         |<-- access + id token + refresh token ----------|
+ |                         |                      |                         |
+ |--- Gửi access token -->|----------------------------------------------->|
+ |                         |                      |--- Verify JWT -------->|
+ |                         |                      |--- Tìm/ tạo user ------|
+ |                         |                      |--- Trả API response --->|
+ |<------------------------|                                                     |
+ |                         |                                                     |
+
