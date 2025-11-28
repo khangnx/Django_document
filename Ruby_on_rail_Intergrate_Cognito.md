@@ -235,7 +235,7 @@ async function getProfile() {
 Tài liệu này giúp bạn triển khai SSO đầy đủ giữa AWS Cognito, Ruby on Rails và Vue.js.
 
 # Flow tổng quan dưới dạng Sequence Diagram (ASCII)
-
+```
 User                   Vue.js SPA             AWS Cognito                Rails API
  |                         |                      |                         |
  |--- Truy cập App ------->|                      |                         |
@@ -264,4 +264,6 @@ User                   Vue.js SPA             AWS Cognito                Rails A
  |                         |                      |--- Trả API response --->|
  |<------------------------|                                                     |
  |                         |                                                     |
+
+```
 
