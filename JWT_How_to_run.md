@@ -24,7 +24,7 @@ The Rails backend verifies the token on each request by checking its signature a
 If the token expires, the frontend will need to prompt the user to log in again or refresh the token if you have a refresh token mechanism in place.
 
 
-
+======================================================================================================
   Handling an expired token usually involves one of a few strategies:
 
 # 1. Refresh Tokens:
