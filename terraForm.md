@@ -61,3 +61,66 @@ Bạn muốn triển khai:
 - https://learn.hashicorp.com/terraform
 - https://github.com/hashicorp/terraform
 
+
+# Để chạy Terraform trên máy local và deploy hạ tầng lên AWS, bạn cần thực hiện theo các bước sau:
+
+## 🛠 Chuẩn bị môi trường
+- Cài Terraform: tải từ terraform.io và thêm vào PATH.
+- Cài AWS CLI: tải từ AWS CLI.
+- Cấu hình AWS credentials:
+```
+aws configure
+```
+
+- Nhập AWS Access Key ID, AWS Secret Access Key, region (ví dụ: ap-southeast-1 cho Singapore).
+
+## 📂 Tạo project Terraform
+
+1. Tạo thư mục dự án:
+```
+mkdir terraform-aws-demo && cd terraform-aws-demo
+```
+
+2. Tạo file main.tf với nội dung cơ bản:
+```
+provider "aws" {
+  region = "ap-southeast-1"
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket = "my-terraform-demo-bucket-12345"
+  acl    = "private"
+}
+```
+## 🚀 Quy trình chạy Terraform
+
+1. Khởi tạo Terraform:
+``
+terraform init
+ → tải plugin AWS provider.
+```
+
+2. Kiểm tra plan:
+```
+terraform plan
+→ hiển thị những gì sẽ được tạo.
+```
+3. Deploy lên AWS:
+```
+terraform apply
+→ xác nhận yes để Terraform tạo resource.
+```
+
+4. Xóa hạ tầng khi không cần nữa:
+```
+terraform destroy
+```
+
+
+## ⚡ Lưu ý quan trọng
+- Luôn dùng IAM user với quyền hạn tối thiểu thay vì root account.
+- Có thể tách file thành variables.tf, outputs.tf để dễ quản lý.
+- Dùng Terraform state (terraform.tfstate) để theo dõi hạ tầng đã deploy.
+- Nếu làm việc nhóm, nên lưu state trong S3 + DynamoDB để tránh xung đột.
+
+
