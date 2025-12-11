@@ -77,11 +77,13 @@ aws configure
 ## 📂 Tạo project Terraform
 
 1. Tạo thư mục dự án:
+   
 ```
 mkdir terraform-aws-demo && cd terraform-aws-demo
 ```
 
 2. Tạo file main.tf với nội dung cơ bản:
+   
 ```
 provider "aws" {
   region = "ap-southeast-1"
@@ -95,23 +97,27 @@ resource "aws_s3_bucket" "example" {
 ## 🚀 Quy trình chạy Terraform
 
 1. Khởi tạo Terraform:
-``
+   
+```
 terraform init
  → tải plugin AWS provider.
 ```
 
 2. Kiểm tra plan:
+   
 ```
 terraform plan
 → hiển thị những gì sẽ được tạo.
 ```
 3. Deploy lên AWS:
+   
 ```
 terraform apply
 → xác nhận yes để Terraform tạo resource.
 ```
 
 4. Xóa hạ tầng khi không cần nữa:
+   
 ```
 terraform destroy
 ```
