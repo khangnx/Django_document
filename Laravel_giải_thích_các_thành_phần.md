@@ -1,3 +1,73 @@
+## Cốt lõi các thành phần chính trong Laravel (giải thích rõ)
+
+Laravel được xây dựng xoay quanh **Service Container** và **request lifecycle**.  
+Mỗi thành phần có một vai trò **rất cụ thể**, không trùng lặp:
+
+### 1. Service Container – Trung tâm của Laravel
+Service Container là **bộ não** của framework:
+- Chịu trách nhiệm **tạo object**
+- **Inject dependency** vào Controller, Middleware, Job, Event…
+- Quản lý vòng đời object (tạo mới hay dùng chung)
+
+👉 Bạn không `new` class, Laravel **resolve** class cho bạn dựa trên type-hint.
+
+---
+
+### 2. Service Provider – Nơi khai sinh hệ thống
+Service Provider là nơi bạn **dạy Laravel biết**:
+- Interface dùng implementation nào
+- Service nào tồn tại trong hệ thống
+- Event, macro, config cần đăng ký
+
+👉 Service Provider **chỉ đăng ký**, không xử lý nghiệp vụ.
+
+---
+
+### 3. Middleware – Cổng kiểm soát request
+Middleware đứng **giữa request và controller** để:
+- Chặn request không hợp lệ
+- Thêm logic chung (auth, permission, logging, locale…)
+
+👉 Middleware quyết định **request có được đi tiếp hay không**.
+
+---
+
+### 4. Controller – Điều phối, không xử lý nghiệp vụ
+Controller chỉ nên:
+- Nhận request
+- Gọi service xử lý
+- Trả response
+
+👉 Controller **không chứa business logic**.
+
+---
+
+### 5. Facade – Lối tắt tiện dụng
+Facade là **lớp proxy** giúp gọi service trong container bằng cú pháp ngắn gọn:
+- Không phải static thật
+- Có thể mock khi test
+
+👉 Facade dùng cho **hạ tầng & framework**, không dùng cho domain logic.
+
+---
+
+### 6. Request Lifecycle – Sợi dây liên kết tất cả
+Toàn bộ các thành phần trên được kích hoạt theo thứ tự:
+- Service Provider đăng ký service
+- Service Container resolve dependency
+- Middleware lọc request
+- Controller gọi service
+- Response được trả về
+
+👉 Đây là lý do Laravel **dễ mở rộng, dễ test và dễ bảo trì**.
+
+
+
+
+
+
+
+
 # Laravel Core Architecture – Deep Dive
 
 > Tài liệu này tổng hợp và đào sâu các thành phần cốt lõi của Laravel: **Request Lifecycle, Service Container, Facade, Middleware, Service Provider, Kiến trúc ứng dụng, Testing, Clean Architecture**, dành cho người muốn hiểu Laravel ở mức **framework internals & kiến trúc**.
