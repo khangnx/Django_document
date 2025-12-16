@@ -184,3 +184,279 @@ Memcached ❌
 👉 **Không công nghệ cache nào ở backend có thể tự động cache HTML/CSS/JS ở client.**  
 👉 Browser chỉ nhận cache thông qua *HTTP headers* hoặc *CDN*.
 
+
+
+
+
+# Cơ chế Redis Cache trong Ruby on Rails (Localhost & AWS)
+
+Dưới đây là **giải thích rõ ràng – từ gốc rễ đến thực tế vận hành** về **cơ chế cache Redis khi dùng Ruby on Rails**, áp dụng **cả localhost lẫn AWS (ElastiCache / EC2 Redis)**. Nội dung đi theo **flow tư duy hệ thống**, không chỉ liệt kê API.
+
+---
+
+## 1. Redis cache trong Rails là gì (đặt đúng vai trò)
+
+Trong Rails, **Redis thường được dùng như một cache store** để:
+
+* Cache **kết quả SQL** (ActiveRecord objects, IDs…)
+* Cache **HTML fragment**
+* Cache **JSON API response**
+* Cache **data tính toán nặng**
+
+👉 Redis **KHÔNG tự biết SQL hay HTML**, nó chỉ lưu **key → value**.
+
+Rails quyết định:
+
+* Cache cái gì
+* Khi nào ghi
+* Khi nào đọc
+* Khi nào xóa / refresh
+
+---
+
+## 2. Kiến trúc tổng thể (Local & AWS)
+
+```text
+Request
+   ↓
+Rails App
+   ↓
+Cache Store (Redis)
+   ↓
+Database (PostgreSQL / MySQL)
+```
+
+### Flow chuẩn
+
+1. Request vào Rails
+2. Rails **check Redis trước**
+3. Có cache → trả về ngay 🚀
+4. Không có cache → query DB → render → **ghi vào Redis**
+5. Trả response
+
+➡️ **DB chỉ bị hit khi cache miss**
+
+---
+
+## 3. Rails kết nối Redis như thế nào?
+
+### `config/environments/production.rb`
+
+```ruby
+config.cache_store = :redis_cache_store, {
+  url: ENV["REDIS_URL"],
+  connect_timeout: 5,
+  read_timeout: 2,
+  write_timeout: 2,
+  reconnect_attempts: 2
+}
+```
+
+### Localhost
+
+```bash
+REDIS_URL=redis://localhost:6379/0
+```
+
+### AWS (ElastiCache)
+
+```bash
+REDIS_URL=redis://my-elasticache.xxxxxx.ap-southeast-1.cache.amazonaws.com:6379
+```
+
+👉 **Code Rails giống nhau**, chỉ khác endpoint.
+
+---
+
+## 4. Cache SQL hoạt động ra sao?
+
+### Ví dụ phổ biến
+
+```ruby
+Rails.cache.fetch("users_active", expires_in: 10.minutes) do
+  User.where(active: true).to_a
+end
+```
+
+### Flow chi tiết
+
+```text
+1. Rails hỏi Redis: có key "users_active" không?
+2. Nếu có:
+     → deserialize → trả kết quả
+3. Nếu không:
+     → query DB
+     → serialize object
+     → ghi vào Redis
+     → trả kết quả
+```
+
+---
+
+## 5. Khi nào cache REFRESH (quan trọng nhất)
+
+Có **4 cơ chế chính**.
+
+---
+
+### ① TTL – hết hạn tự động (phổ biến nhất)
+
+```ruby
+expires_in: 10.minutes
+```
+
+⏱ Redis **tự xóa key** khi hết thời gian.
+
+```text
+Time up
+   ↓
+Key biến mất
+   ↓
+Request tiếp theo → query DB → cache lại
+```
+
+👉 **Cách an toàn – dễ kiểm soát – dùng nhiều nhất**
+
+---
+
+### ② Manual delete – xóa thủ công khi data thay đổi
+
+#### Ví dụ: user được update
+
+```ruby
+after_commit :clear_cache
+
+def clear_cache
+  Rails.cache.delete("users_active")
+end
+```
+
+Flow:
+
+```text
+Update DB
+   ↓
+Xóa cache
+   ↓
+Request sau → cache miss → query mới
+```
+
+👉 **Chuẩn cho dữ liệu quan trọng**
+
+---
+
+### ③ Cache versioning – đổi key khi data đổi
+
+```ruby
+cache_key = "users_active_v#{User.maximum(:updated_at).to_i}"
+
+Rails.cache.fetch(cache_key) do
+  User.where(active: true).to_a
+end
+```
+
+* ✔ Không cần delete
+* ✔ Cache cũ tự “chết”
+* ❌ Nhiều key hơn
+
+---
+
+### ④ Low-level race condition protection
+
+```ruby
+Rails.cache.fetch("stats", expires_in: 5.minutes, race_condition_ttl: 10) do
+  heavy_query
+end
+```
+
+👉 Tránh **thundering herd** (nhiều request cùng refresh cache)
+
+---
+
+## 6. Cache HTML / Fragment cache hoạt động thế nào?
+
+### Ví dụ trong view
+
+```erb
+<% cache ["user-profile", @user] do %>
+  <%= render "profile", user: @user %>
+<% end %>
+```
+
+Rails tự tạo key:
+
+```text
+views/user-profile/users/42-20251216120000
+```
+
+➡️ Khi `@user.updated_at` thay đổi → **key đổi → cache auto refresh**
+
+👉 Đây là **cache thông minh nhất của Rails**
+
+---
+
+## 7. Cache API / JSON
+
+```ruby
+def index
+  render json: Rails.cache.fetch("users_api", expires_in: 1.minute) {
+    User.all.as_json
+  }
+end
+```
+
+Flow:
+
+```text
+Request → Redis → JSON → Response
+```
+
+---
+
+## 8. Redis KHÔNG tự refresh – Rails quyết định
+
+❗ Redis không biết DB thay đổi
+❗ Redis không tự sync SQL
+
+👉 Rails phải:
+
+* Set TTL
+* Delete cache
+* Hoặc đổi key
+
+---
+
+## 9. So sánh Cache Local vs AWS
+
+| Tiêu chí       | Local Redis | AWS ElastiCache |
+| -------------- | ----------- | --------------- |
+| Tốc độ         | Rất nhanh   | Rất nhanh       |
+| Bền dữ liệu    | Thấp        | Cao             |
+| Scale          | ❌           | ✅               |
+| HA             | ❌           | ✅               |
+| Cơ chế refresh | Giống nhau  | Giống nhau      |
+
+➡️ **Logic cache không đổi**
+
+---
+
+## 10. Best practice thực tế
+
+### ✅ Nên cache
+
+* Read nhiều, write ít
+* Query nặng
+* HTML fragment
+* API response
+
+### ❌ Không nên cache
+
+* Dữ liệu thay đổi liên tục
+* Dữ liệu yêu cầu realtime tuyệt đối
+
+---
+
+## 11. Một câu tóm tắt cốt lõi
+
+> **Redis chỉ là bộ nhớ key-value, Rails mới là thằng quyết định khi nào cache, khi nào refresh, thông qua TTL, xóa cache, hoặc đổi cache key khi dữ liệu thay đổi.**
+
