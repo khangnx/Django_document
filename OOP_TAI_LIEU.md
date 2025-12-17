@@ -38,10 +38,10 @@ OOP có **4 đặc tính chính**:
 
 | Đặc tính | Mô tả ngắn | Ví dụ |
 |--------|-----------|------|
-| **Đóng gói** | Che giấu chi tiết bên trong, chỉ cung cấp cách truy cập an toàn | `soTienTaiKhoan`, `rutTien()`, `napTien()` |
-| **Kế thừa** | Lớp con kế thừa thuộc tính & phương thức lớp cha | `Cho` kế thừa `DongVat` |
-| **Đa hình** | Cùng phương thức, hành vi khác nhau | `phatTiengKeu()` của chó & mèo |
-| **Trừu tượng hóa** | Định nghĩa khái niệm chung, không quan tâm chi tiết | `HinhHoc.tinhDienTich()` |
+| **Encapsulation (Đóng gói)** | Giấu dữ liệu bên trong đối tượng, chỉ cho phép truy cập qua phương thức | Biến soTien trong lớp TaiKhoanNganHang chỉ thay đổi qua rutTien() hoặc napTien()|
+| *Inheritance (Kế thừa)** | Lớp con kế thừa thuộc tính & phương thức lớp cha | Lớp Cho kế thừa từ lớp DongVat|
+| *Polymorphism (Đa hình)** | Một phương thức có thể có nhiều cách triển khai khác nhau |Hàm phatTiengKeu() của Cho in ra “Gâu gâu”, còn Meo in ra “Meo meo”|
+| **Abstraction (Trừu tượng hóa)** | Định nghĩa khái niệm chung, không quan tâm chi tiết | Lớp HinhHoc có phương thức tinhDienTich(), nhưng cách tính cụ thể do lớp con HinhTron, HinhVuong định nghĩa |
 
 ---
 
