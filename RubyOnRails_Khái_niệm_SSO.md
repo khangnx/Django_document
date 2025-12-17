@@ -65,3 +65,33 @@
 ```
 Người dùng → Rails (SP) → Redirect → IDP → Xác thực → Assertion/Token → Rails (SP) → Session
 ```
+
+
+# Khi bạn dùng AWS Cognito làm IDP, dữ liệu xác thực đăng nhập không nằm trong database của ứng dụng Rails nữa, mà được quản lý hoàn toàn bởi Cognito. Cụ thể:
+
+## 🗄️ Nơi lưu dữ liệu xác thực trong Cognito
+```
+### User Pool (chính yếu):
+- Đây là nơi Cognito lưu trữ thông tin người dùng.
+- Bao gồm: username/email, mật khẩu (đã hash), trạng thái tài khoản, các thuộc tính (attributes) như tên, số điện thoại, role.
+- Cognito tự động quản lý việc mã hóa, hash mật khẩu (PBKDF2, bcrypt, hoặc tương đương).
+- Bạn có thể thêm custom attributes nếu cần.
+### Identity Pool (tùy chọn):
+- Dùng để cấp quyền truy cập tạm thời vào các dịch vụ AWS (S3, DynamoDB…).
+- Không lưu mật khẩu, chỉ lưu mapping giữa user pool ID và IAM role.
+### Tokens (JWT):
+- Sau khi đăng nhập, Cognito phát hành ID token, Access token, Refresh token.
+- Các token này không lưu trong database của bạn, mà được gửi về client (browser/app).
+- Rails chỉ cần xác thực token bằng public key của Cognito (JWKS endpoint).
+
+## 🔑 Vai trò của ứng dụng Rails
+- Rails không lưu mật khẩu hay dữ liệu xác thực gốc.
+- Rails chỉ lưu thông tin cần thiết để tạo session (ví dụ: user_id, email, role) sau khi xác thực token từ Cognito.
+- Nếu cần đồng bộ dữ liệu (ví dụ: profile, quyền), bạn có thể copy attributes từ Cognito về database của Rails, nhưng mật khẩu và xác thực vẫn nằm ở Cognito.
+
+## 📌 Tóm lại
+- Dữ liệu đăng nhập (mật khẩu, xác thực) → Lưu trong User Pool của Cognito.
+- Token đăng nhập → Cognito phát hành, client giữ, Rails xác thực.
+- Ứng dụng Rails → Chỉ lưu session hoặc thông tin phụ trợ, không quản lý mật khẩu.
+
+
