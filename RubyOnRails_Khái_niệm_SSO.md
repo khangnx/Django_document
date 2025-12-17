@@ -94,4 +94,31 @@ Người dùng → Rails (SP) → Redirect → IDP → Xác thực → Assertion
 - Token đăng nhập → Cognito phát hành, client giữ, Rails xác thực.
 - Ứng dụng Rails → Chỉ lưu session hoặc thông tin phụ trợ, không quản lý mật khẩu.
 
+```
+🧩 Các bước khi user login lại sau logout
+- User logout
+- Khi logout, ứng dụng Rails thường sẽ xoá session và token (Access/ID/Refresh Token) khỏi bộ nhớ.
+- Nếu bạn cấu hình logout đồng bộ với Cognito, thì Refresh Token cũng bị revoke.
+- Sau 1 giờ, user login lại
+- Vì session đã xoá, Rails không còn token để kiểm tra.
+- Người dùng truy cập ứng dụng → Rails phát hiện chưa có phiên đăng nhập → chuyển hướng đến Cognito.
+- Cognito kiểm tra trạng thái
+- Nếu user đã logout khỏi Cognito (hoặc Refresh Token đã hết hạn/revoke) → Cognito yêu cầu nhập lại username/password hoặc đăng nhập qua IdP (Google, Azure AD…).
+- Nếu user chưa thực sự logout khỏi Cognito (ví dụ chỉ logout ở Rails, nhưng Cognito vẫn còn session) → Cognito có thể tự động xác thực lại và trả về token mới mà không cần nhập lại mật khẩu.
+- Rails nhận token mới
+- Rails backend gọi Cognito Token Endpoint để đổi Authorization Code lấy Access/ID/Refresh Token mới.
+- Rails tạo session mới cho user.
+
+📌 Tóm gọn cơ chế
+- Logout ở Rails + Cognito → user phải đăng nhập lại từ đầu.
+- Logout chỉ ở Rails, Cognito vẫn còn session → khi login lại, Cognito cấp token mới ngay (SSO vẫn giữ trạng thái).
+- Token hết hạn nhưng Refresh Token còn sống → Rails có thể dùng Refresh Token để xin token mới mà không cần nhập lại mật khẩu.
+- Refresh Token cũng hết hạn hoặc bị revoke → bắt buộc user phải đăng nhập lại.
+
+⚠️ Lưu ý thực tế
+- Thời gian sống của Refresh Token: bạn cấu hình trong Cognito (ví dụ 30 ngày).
+- Logout đồng bộ: nếu muốn chắc chắn user phải nhập lại mật khẩu sau logout, cần gọi Cognito logout endpoint để huỷ session IdP.
+- SSO đặc trưng: nếu user đăng nhập qua IdP (Google, Azure AD), thì logout ở Rails không đồng nghĩa logout khỏi IdP. Khi quay lại, IdP có thể tự động xác thực lại.
+
+```
 
