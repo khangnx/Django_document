@@ -70,7 +70,7 @@ Người dùng → Rails (SP) → Redirect → IDP → Xác thực → Assertion
 # Khi bạn dùng AWS Cognito làm IDP, dữ liệu xác thực đăng nhập không nằm trong database của ứng dụng Rails nữa, mà được quản lý hoàn toàn bởi Cognito. Cụ thể:
 
 ## 🗄️ Nơi lưu dữ liệu xác thực trong Cognito
-```
+
 ### User Pool (chính yếu):
 - Đây là nơi Cognito lưu trữ thông tin người dùng.
 - Bao gồm: username/email, mật khẩu (đã hash), trạng thái tài khoản, các thuộc tính (attributes) như tên, số điện thoại, role.
