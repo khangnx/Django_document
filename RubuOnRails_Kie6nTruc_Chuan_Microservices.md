@@ -473,4 +473,10 @@ ALB
 
 ---
 
-✍️ Author: Rails Architecture Guide
+## 📐 Luồng hoạt động khi có request
+- Client gọi GET /api/a/orders với JWT.
+- Gateway verify JWT bằng public key từ Auth service.
+- Gateway forward request đến appA kèm header X-User-ID.
+- AppA xử lý nghiệp vụ, trả kết quả về Gateway.
+- Gateway trả response cho client.
+
