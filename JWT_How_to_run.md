@@ -1,3 +1,142 @@
+# Ruby on Rails với JWT cho hệ thống Microservices SSO
+
+## 🧩 Các thành phần chính của JWT
+JWT gồm 3 phần, nối bằng dấu chấm (`.`):
+
+1. **Header**
+   - Chứa thuật toán ký (`alg`) và loại token (`typ`).
+   - Ví dụ:
+     ```json
+     {
+       "alg": "HS256",
+       "typ": "JWT"
+     }
+     ```
+
+2. **Payload (Claims)**
+   - Chứa dữ liệu về user và quyền hạn.
+   - Loại claims:
+     - **Registered claims**: chuẩn (iss, exp, sub, aud).
+     - **Public claims**: định nghĩa chung.
+     - **Private claims**: tùy chỉnh (user_id, role, scopes).
+   - Ví dụ:
+     ```json
+     {
+       "sub": "1234567890",
+       "name": "Nguyen Van A",
+       "role": "admin",
+       "exp": 1734600000
+     }
+     ```
+
+3. **Signature**
+   - Được tạo bằng cách mã hóa `Header + Payload` với secret/private key.
+   - Đảm bảo token không bị giả mạo.
+
+---
+
+## 🔑 Nguyên lý chính khi dùng JWT cho SSO trong microservices
+- **Auth Service (Identity Provider):**
+  Rails app chuyên trách đăng nhập, xác thực user. Sau khi thành công, phát hành JWT.
+- **JWT Token:**
+  - Chứa thông tin user (ID, roles, scopes).
+  - Được ký bằng secret hoặc private key (HS256 hoặc RS256).
+  - Có thời hạn (expiration).
+- **Microservices:**
+  - Nhận request kèm JWT trong header (`Authorization: Bearer <token>`).
+  - Xác thực chữ ký và hạn token.
+- **SSO Flow:**
+  Người dùng đăng nhập một lần tại Auth Service → nhận JWT → dùng JWT để truy cập nhiều microservice.
+
+---
+
+## ⚙️ Các bước triển khai trong Rails
+
+1. **Tạo Rails API-only app cho Auth Service**
+   ```bash
+   rails new auth_service --api'
+   ```
+  ### Thêm gem
+  
+  ```
+  gem 'bcrypt'
+  gem 'jwt'
+```
+
+2. ** Sinh JWT khi login thành công
+
+```
+payload = { user_id: user.id, exp: (Time.now + 2.hours).to_i }
+token = JWT.encode(payload, Rails.application.secret_key_base, 'HS256')
+render json: { token: token }
+```
+
+3. **Xác thực JWT ở microservice khác
+
+```
+def authenticate_request
+  header = request.headers['Authorization']
+  token = header.split(' ').last if header
+  begin
+    decoded = JWT.decode(token, Rails.application.secret_key_base, true, { algorithm: 'HS256' })
+    @current_user_id = decoded[0]['user_id']
+  rescue JWT::DecodeError
+    render json: { error: 'Unauthorized' }, status: :unauthorized
+  end
+end
+
+```
+
+4. ** SSO mở rộng với OAuth/OpenID Connect Có thể tích hợp với Auth0, Okta, hoặc OmniAuth để quản lý danh tính tập trung.
+
+
+===========================================================================
+
+# 🔄 Luồng đi của một request trong hệ thống SSO microservices
+
+## 1. Client login
+- Người dùng gửi thông tin đăng nhập (username/password) đến **Auth Service**.
+
+## 2. Auth Service xác thực
+- Auth Service kiểm tra thông tin đăng nhập.
+- Nếu hợp lệ → tạo JWT (chứa user_id, role, exp).
+- Trả JWT về cho client.
+
+## 3. Client gọi microservice khác
+- Client gửi request đến microservice A/B/C.
+- JWT được đính kèm trong header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+## 4. Microservice xác thực JWT
+- Microservice nhận request → kiểm tra chữ ký JWT bằng secret/public key.
+- Nếu hợp lệ và chưa hết hạn → giải mã payload → lấy thông tin user.
+- Nếu không hợp lệ → trả về `401 Unauthorized`.
+
+## 5. Microservice xử lý logic
+- Dựa vào claims (role, scopes) để quyết định quyền truy cập.
+- Thực hiện nghiệp vụ và trả kết quả về cho client.
+
+---
+
+## 🌐 Giao thức sử dụng giữa các microservices
+- **HTTP/HTTPS (REST API):** phổ biến nhất, JWT truyền qua header.
+- **gRPC (HTTP/2):** hiệu năng cao, JWT truyền qua metadata.
+- **Message Queue (Kafka, RabbitMQ):** JWT có thể nhúng vào message header trong hệ thống event-driven.
+
+👉 Thực tế: đa số hệ thống microservices Rails dùng **HTTPS REST API** để giao tiếp.
+
+
+=============================
+   
+   
+   
+   
+   
+   
+   
+   
    JWT authentication is a popular method for securing APIs. Here’s a quick rundown of how it works:
 # 1. User Login:
 
