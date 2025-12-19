@@ -482,3 +482,184 @@ Server cấp Access Token mới
 - Microservices
 - API Gateway + Auth Service
 
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+card phía trên để tải về máy.
+
+# 🛡️ Tổng hợp kiến thức về SSO, JWT và Public Key trong Ruby on Rails
+
+## 1. Nguyên lý SSO và Token
+- **SSO (Single Sign-On)** cho phép user đăng nhập một lần, dùng nhiều dịch vụ.
+- IdP (Identity Provider) phát hành **token** (thường là JWT).
+- Server (Service Provider) không lưu mật khẩu, chỉ cần **verify token** bằng public key của IdP.
+
+---
+
+## 2. JWT Token Structure
+JWT gồm 3 phần:  
+
+
+header.payload.signature
+
+### Ví dụ header:
+```json
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "abc123"
+}
+
+- alg: thuật toán ký (RS256 = RSA + SHA256)
+- typ: loại token (JWT)
+- kid: ID của public key trong JWKS
+
+3. Public Key và JWKS
+- IdP cung cấp endpoint:
+https://<idp-domain>/.well-known/openid-configuration
+- Trong đó có link đến JWKS:
+https://<idp-domain>/.well-known/jwks.json
+
+
+Ví dụ JWKS:
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "kid": "abc123",
+      "use": "sig",
+      "n": "0vx7agoebGcQSuuPiLJXZptN...",
+      "e": "AQAB"
+    }
+  ]
+}
+
+
+- kid: khớp với token header để chọn đúng key.
+- n, e: modulus và exponent của RSA public key.
+
+4. Rails xử lý login với SSO
+Quy trình:
+- User login qua IdP → nhận JWT token.
+- Rails decode header → lấy kid.
+- Fetch JWKS từ IdP → tìm key có kid khớp.
+- Dựng public key từ n và e.
+- Verify chữ ký token bằng gem jwt.
+- Kiểm tra claims (exp, iss, aud, sub).
+- Nếu hợp lệ → tạo session user.
+
+5. Ví dụ Rails Code
+Service: JwtVerifier
+require 'jwt'
+require 'net/http'
+require 'uri'
+require 'json'
+
+class JwtVerifier
+  def initialize(token)
+    @token = token
+  end
+
+  def verify
+    header = JWT.decode(@token, nil, false).last
+    kid = header['kid']
+
+    jwks = fetch_jwks
+    key_data = jwks['keys'].find { |k| k['kid'] == kid }
+    raise "Key not found" unless key_data
+
+    public_key = JWT::JWK.import(key_data).public_key
+    payload, _header = JWT.decode(@token, public_key, true, { algorithm: 'RS256' })
+    payload
+  end
+
+  private
+
+  def fetch_jwks
+    uri = URI("#{ENV['OIDC_HOST']}/.well-known/jwks.json")
+    res = Net::HTTP.get(uri)
+    JSON.parse(res)
+  end
+end
+
+
+Controller: SessionsController
+class SessionsController < ApplicationController
+  def create
+    token = params[:id_token]
+
+    begin
+      payload = JwtVerifier.new(token).verify
+
+      user = User.find_or_create_by(uid: payload['sub']) do |u|
+        u.email = payload['email']
+        u.name  = payload['name']
+      end
+
+      session[:user_id] = user.id
+      redirect_to root_path, notice: "Login thành công!"
+    rescue => e
+      Rails.logger.error("JWT verify failed: #{e.message}")
+      redirect_to login_path, alert: "Token không hợp lệ"
+    end
+  end
+
+  def destroy
+    reset_session
+    redirect_to root_path, notice: "Đã logout"
+  end
+end
+
+
+
+6. Lưu Public Key trong Database
+Bảng jwks_keys
+create_table :jwks_keys do |t|
+  t.string :kid, null: false
+  t.string :kty
+  t.string :alg
+  t.text   :n
+  t.text   :e
+  t.timestamps
+end
+add_index :jwks_keys, :kid, unique: true
+
+
+Cập nhật DB
+- Định kỳ (cron job, ví dụ mỗi 12h).
+- Lazy update: khi verify token mà không tìm thấy kid → fetch JWKS ngay.
+Job cập nhật JWKS
+class UpdateJwksJob < ApplicationJob
+  queue_as :default
+
+  def perform
+    uri = URI("#{ENV['OIDC_HOST']}/.well-known/jwks.json")
+    jwks = JSON.parse(Net::HTTP.get(uri))
+
+    jwks['keys'].each do |key|
+      JwksKey.find_or_initialize_by(kid: key['kid']).tap do |k|
+        k.kty = key['kty']
+        k.alg = key['alg']
+        k.n   = key['n']
+        k.e   = key['e']
+        k.save!
+      end
+    end
+  end
+end
+
+
+
+7. Lưu ý quan trọng
+- Không lưu private key → chỉ lưu public key.
+- Key rotation: IdP có thể thay đổi key → cần cơ chế refresh.
+- Cache: Dù lưu DB, vẫn nên cache key trong memory để tăng tốc verify.
+- Claims validation: luôn kiểm tra exp, iss, aud để tránh token giả mạo.
+
+✅ Kết luận
+- Server Rails không lưu mật khẩu, chỉ cần public key của IdP để verify token.
+- Public key có thể lưu trong DB để quản lý, nhưng cần cơ chế update định kỳ và lazy update khi gặp kid mới.
+- Toàn bộ flow: User login → nhận JWT → verify bằng public key → tạo session
+```
