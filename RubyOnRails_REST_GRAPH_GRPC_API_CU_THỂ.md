@@ -155,6 +155,20 @@ end
 * Tránh nhiều endpoint
 * Client chủ động chọn field
 
+```
+## Query trong GraphQL
+- Mục đích: Lấy dữ liệu từ server, tương tự như câu lệnh SELECT trong SQL.
+- Đặc điểm:
+- Chỉ đọc dữ liệu, không thay đổi trạng thái hệ thống.
+- Idempotent: gọi nhiều lần vẫn cho kết quả giống nhau.
+
+## Mutation trong GraphQL
+• 	Mục đích: Thay đổi dữ liệu trên server (tạo, cập nhật, xóa).
+• 	Đặc điểm:
+• 	Có thể tạo ra side-effect (ví dụ thêm bản ghi mới).
+• 	Chỉ các top-level mutation fields mới được phép gây tác động, còn các field con phải không có side-effect
+```
+
 ---
 
 ## 2. Cài GraphQL cho Rails
