@@ -482,3 +482,356 @@ end
 ➡ Model chỉ đọc cho report/search.
 
 ---
+
+
+
+# Polymorphic Association, Single Table Inheritance (STI) và Arel Table trong Ruby on Rails
+
+> Tài liệu giải thích **thuần kỹ thuật – không hoa mỹ**, tập trung vào **bản chất**, **cách Rails xử lý**, **khi dùng / khi tránh**, kèm **ví dụ cụ thể**.
+
+---
+
+## 1. Polymorphic Association
+
+### 1.1 Khái niệm (bản chất)
+
+**Polymorphic Association** cho phép **một bảng con** có thể liên kết tới **nhiều bảng cha khác nhau** thông qua **2 cột**:
+
+* `<association>_id`
+* `<association>_type`
+
+Rails **không tạo foreign key thật** trong database.
+Toàn bộ việc liên kết được xử lý ở **tầng ActiveRecord**.
+
+---
+
+### 1.2 Cấu trúc database
+
+```sql
+comments
+---------
+id
+content
+commentable_id
+commentable_type
+```
+
+Ví dụ dữ liệu:
+
+| id | content | commentable_id | commentable_type |
+| -- | ------- | -------------- | ---------------- |
+| 1  | Hay     | 5              | Post             |
+| 2  | Dở      | 2              | Video            |
+
+---
+
+### 1.3 Khai báo model trong Rails
+
+```ruby
+class Comment < ApplicationRecord
+  belongs_to :commentable, polymorphic: true
+end
+
+class Post < ApplicationRecord
+  has_many :comments, as: :commentable
+end
+
+class Video < ApplicationRecord
+  has_many :comments, as: :commentable
+end
+```
+
+---
+
+### 1.4 Rails xử lý nội bộ như thế nào
+
+Khi gọi:
+
+```ruby
+comment.commentable
+```
+
+Rails sẽ:
+
+1. Đọc `commentable_type` → `"Post"`
+2. Constantize thành class `Post`
+3. Query:
+
+```sql
+SELECT * FROM posts WHERE id = commentable_id;
+```
+
+---
+
+### 1.5 SQL sinh ra thực tế
+
+```ruby
+Comment.where(commentable: post)
+```
+
+```sql
+SELECT * FROM comments
+WHERE commentable_type = 'Post'
+AND commentable_id = 5;
+```
+
+---
+
+### 1.6 Khi nào nên dùng
+
+Dùng khi:
+
+* Một entity **giống nhau về hành vi**
+* Gắn với **nhiều model khác nhau**
+* Ví dụ:
+
+  * Comment
+  * Like
+  * ActivityLog
+  * Attachment
+
+---
+
+### 1.7 Khi KHÔNG nên dùng
+
+❌ Không dùng khi:
+
+* Cần foreign key constraint
+* Cần JOIN phức tạp
+* Báo cáo SQL nặng
+* Dataset lớn
+
+❌ Tránh nếu:
+
+* Model cha có logic rất khác nhau
+* Cần enforce tính toàn vẹn dữ liệu ở DB level
+
+---
+
+## 2. Single Table Inheritance (STI)
+
+### 2.1 Khái niệm (bản chất)
+
+**STI** cho phép **nhiều class Ruby** dùng chung **một bảng database**.
+
+Rails dùng **cột `type`** để phân biệt subclass.
+
+> Database không biết inheritance, chỉ có Rails biết
+
+---
+
+### 2.2 Cấu trúc database
+
+```sql
+vehicles
+---------
+id
+type
+brand
+speed
+battery_capacity
+fuel_capacity
+```
+
+---
+
+### 2.3 Khai báo class Ruby
+
+```ruby
+class Vehicle < ApplicationRecord
+end
+
+class Car < Vehicle
+end
+
+class ElectricCar < Vehicle
+end
+```
+
+---
+
+### 2.4 Dữ liệu thực tế
+
+| id | type        | brand  | speed | battery_capacity | fuel_capacity |
+| -- | ----------- | ------ | ----- | ---------------- | ------------- |
+| 1  | Car         | Toyota | 180   | NULL             | 50            |
+| 2  | ElectricCar | Tesla  | 220   | 75               | NULL          |
+
+---
+
+### 2.5 Rails xử lý thế nào
+
+```ruby
+Vehicle.all
+```
+
+```sql
+SELECT * FROM vehicles;
+```
+
+Rails dựa vào cột `type` để khởi tạo object đúng class.
+
+---
+
+```ruby
+ElectricCar.all
+```
+
+```sql
+SELECT * FROM vehicles
+WHERE type = 'ElectricCar';
+```
+
+---
+
+### 2.6 Ưu điểm
+
+* Không cần nhiều bảng
+* Query đơn giản
+* Thể hiện OOP rõ ở Ruby
+* Dễ chia sẻ logic chung
+
+---
+
+### 2.7 Nhược điểm (quan trọng)
+
+* Bảng nhiều cột NULL
+* Không enforce schema cho từng subclass
+* Refactor rất khó khi dự án lớn
+* Index và constraint kém hiệu quả
+
+---
+
+### 2.8 Khi dùng / khi tránh
+
+**Dùng khi:**
+
+* Subclass rất giống nhau
+* Ít type
+* Logic khác biệt nhỏ
+
+**Tránh khi:**
+
+* Schema khác biệt lớn
+* Domain phức tạp
+* Data tăng nhanh
+
+---
+
+## 3. Arel Table trong ActiveRecord
+
+### 3.1 Khái niệm (bản chất)
+
+**Arel** là query builder nội bộ của ActiveRecord.
+
+ActiveRecord DSL → Arel AST → SQL
+
+---
+
+### 3.2 `arel_table` là gì
+
+```ruby
+User.arel_table
+```
+
+Trả về object đại diện cho bảng `users`:
+
+```ruby
+#<Arel::Table name="users">
+```
+
+---
+
+### 3.3 Vì sao cần Arel
+
+ActiveRecord DSL **không đủ** cho:
+
+* OR phức tạp
+* Subquery
+* CASE WHEN
+* So sánh cột với cột
+* UNION
+
+---
+
+### 3.4 So sánh cột với cột
+
+❌ Không làm được bằng where hash:
+
+```ruby
+User.where("users.created_at > users.updated_at")
+```
+
+✅ Dùng Arel:
+
+```ruby
+users = User.arel_table
+
+condition = users[:created_at].gt(users[:updated_at])
+
+User.where(condition)
+```
+
+```sql
+SELECT * FROM users
+WHERE users.created_at > users.updated_at;
+```
+
+---
+
+### 3.5 OR condition phức tạp
+
+```ruby
+users = User.arel_table
+
+cond = users[:role].eq('admin')
+  .or(users[:age].gt(30))
+
+User.where(cond)
+```
+
+```sql
+WHERE ("users"."role" = 'admin' OR "users"."age" > 30)
+```
+
+---
+
+### 3.6 Subquery với Arel
+
+```ruby
+orders = Order.arel_table
+
+subquery = orders
+  .project(orders[:user_id])
+  .where(orders[:total].gt(1000))
+
+User.where(User.arel_table[:id].in(subquery))
+```
+
+---
+
+### 3.7 Khi nào dùng Arel
+
+* ActiveRecord DSL không biểu diễn được
+* Cần SQL chính xác
+* Query động phức tạp
+
+---
+
+### 3.8 Khi KHÔNG dùng Arel
+
+* CRUD đơn giản
+* Query dễ đọc bằng ActiveRecord
+* Team junior nhiều
+
+---
+
+## 4. So sánh nhanh
+
+| Tính năng      | Polymorphic | STI     | Arel        |
+| -------------- | ----------- | ------- | ----------- |
+| Mục đích       | Quan hệ     | Kế thừa | Query       |
+| Tầng           | Model       | Model   | Query layer |
+| DB constraint  | ❌           | ❌       | ❌           |
+| Độ phức tạp    | Trung       | Trung   | Cao         |
+| Sai là trả giá | Cao         | Rất cao | Trung       |
