@@ -225,7 +225,7 @@ Rails mở rộng thêm nhiều hàm tiện lợi cho chuỗi:
 - `classify` → Chuyển tên bảng thành class name.
 - `constantize` → Chuyển chuỗi thành hằng số/class/module.
 
-#PHẦN KẾ TIẾP
+# PHẦN KẾ TIẾP
 
 ## ✅ Tóm lại
 - **Ruby core:** `gets`, `chomp`, `strip`, `to_s`, `to_i`, `to_f`, `upcase`, `downcase`, `split`, `join`, `include?`, `empty?`, v.v.
