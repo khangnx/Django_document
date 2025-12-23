@@ -370,7 +370,7 @@ Các loại điều kiện trong Ruby on Rails gồm:
 
 # Debug trong Ruby on Rails
 
-## 1. Hàm `debug`
+## 1. Hàm debug
 - Dùng để hiển thị nội dung của biến dưới dạng YAML trong view.
 - Ví dụ:
   ```erb
