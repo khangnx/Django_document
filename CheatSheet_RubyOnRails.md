@@ -1,4 +1,4 @@
-# 🚀 Ruby on Rails Cheat Sheet (Có giải thích ngắn gọn)
+#PHẦN KẾ TIẾP
 
 ## 1. Object & Nil
 - `nil?` – kiểm tra object có phải nil
@@ -103,7 +103,7 @@
   - Exclusive range: `(1...5)` → gồm 1, 2, 3, 4
 
 ---
-
+#PHẦN KẾ TIẾP
 ## 🔹 Các hàm kiểm tra Range trong Ruby
 
 | Hàm        | Công dụng | Ví dụ | Kết quả |
@@ -159,3 +159,215 @@ Các hàm quan trọng nhất để check và thao tác với Range trong Ruby o
 - Ruby: include?, cover?, ===, between?, to_a
 - Rails (ActiveSupport): overlap?, sole, as_json
 - Ứng dụng: Query, Validation, Điều kiện logic
+
+#PHẦN KẾ TIẾP
+# Các hàm xử lý chuỗi & nhập liệu trong Ruby / Rails
+
+## 🔹 Nhập liệu từ bàn phím
+- `gets` → Lấy input từ bàn phím (có cả ký tự xuống dòng `\n`).
+- `gets.chomp` → Lấy input và loại bỏ ký tự xuống dòng.
+- `gets.strip` → Lấy input và loại bỏ khoảng trắng đầu/cuối.
+
+---
+
+## 🔹 Chuyển đổi kiểu dữ liệu
+- `to_s` → Chuyển thành chuỗi.
+- `to_i` → Chuyển thành số nguyên.
+- `to_f` → Chuyển thành số thực (float).
+- `to_sym` → Chuyển thành symbol.
+- `to_a` → Chuyển thành mảng.
+- `to_h` → Chuyển thành hash.
+
+---
+
+## 🔹 Xử lý chuỗi cơ bản
+- `chomp` → Xóa ký tự xuống dòng ở cuối chuỗi.
+- `strip` → Xóa khoảng trắng đầu/cuối chuỗi.
+- `lstrip` → Xóa khoảng trắng bên trái.
+- `rstrip` → Xóa khoảng trắng bên phải.
+- `upcase` → Viết hoa toàn bộ.
+- `downcase` → Viết thường toàn bộ.
+- `capitalize` → Viết hoa chữ cái đầu tiên.
+- `swapcase` → Đảo ngược hoa/thường.
+- `gsub(pattern, replacement)` → Thay thế chuỗi theo regex.
+- `sub(pattern, replacement)` → Thay thế chuỗi đầu tiên khớp regex.
+- `split(separator)` → Tách chuỗi thành mảng.
+- `join(separator)` → Ghép mảng thành chuỗi.
+
+---
+
+## 🔹 Kiểm tra chuỗi
+- `empty?` → Kiểm tra chuỗi rỗng.
+- `nil?` → Kiểm tra giá trị nil.
+- `include?(substr)` → Kiểm tra chuỗi có chứa substring.
+- `start_with?(prefix)` → Kiểm tra chuỗi bắt đầu bằng prefix.
+- `end_with?(suffix)` → Kiểm tra chuỗi kết thúc bằng suffix.
+- `match?(regex)` → Kiểm tra chuỗi khớp regex.
+
+---
+
+## 🔹 Các hàm hữu ích trong Rails (ActiveSupport)
+Rails mở rộng thêm nhiều hàm tiện lợi cho chuỗi:
+- `blank?` → Chuỗi rỗng hoặc chỉ có khoảng trắng.
+- `present?` → Chuỗi có nội dung.
+- `squish` → Xóa khoảng trắng dư thừa, chỉ giữ một khoảng trắng giữa các từ.
+- `truncate(length)` → Cắt chuỗi theo độ dài.
+- `truncate_words(count)` → Cắt chuỗi theo số lượng từ.
+- `pluralize` → Chuyển số + từ thành dạng số nhiều.
+- `singularize` → Chuyển từ số nhiều thành số ít.
+- `titleize` → Viết hoa chữ cái đầu mỗi từ.
+- `parameterize` → Chuyển chuỗi thành dạng URL-friendly (slug).
+- `underscore` → Chuyển CamelCase thành snake_case.
+- `camelize` → Chuyển snake_case thành CamelCase.
+- `dasherize` → Chuyển snake_case thành dạng gạch nối.
+- `humanize` → Chuyển chuỗi thành dạng dễ đọc cho người.
+- `tableize` → Chuyển class name thành tên bảng.
+- `classify` → Chuyển tên bảng thành class name.
+- `constantize` → Chuyển chuỗi thành hằng số/class/module.
+
+#PHẦN KẾ TIẾP
+
+## ✅ Tóm lại
+- **Ruby core:** `gets`, `chomp`, `strip`, `to_s`, `to_i`, `to_f`, `upcase`, `downcase`, `split`, `join`, `include?`, `empty?`, v.v.
+- **Rails ActiveSupport:** `blank?`, `present?`, `squish`, `truncate`, `pluralize`, `singularize`, `titleize`, `parameterize`, `underscore`, `camelize`, `dasherize`, `humanize`, `tableize`, `classify`, `constantize`.
+
+- # Tài liệu: Các loại điều kiện trong Ruby on Rails
+
+## 🔹 1. Cấu trúc `if`
+```ruby
+if condition
+  # code khi điều kiện đúng
+end
+
+
+Ví dụ:
+if user.active?
+  puts "Người dùng đang hoạt động"
+end
+
+```
+
+## 🔹 2. if..else
+```
+if condition
+  # code khi đúng
+else
+  # code khi sai
+end
+
+Ví dụ:
+if age >= 18
+  puts "Đủ tuổi"
+else
+  puts "Chưa đủ tuổi"
+end
+
+```
+
+## 🔹 3. if..elsif..else
+```
+if condition1
+  # code khi condition1 đúng
+elsif condition2
+  # code khi condition2 đúng
+else
+  # code mặc định
+end
+
+
+Ví dụ:
+if score >= 90
+  puts "Xuất sắc"
+elsif score >= 75
+  puts "Khá"
+else
+  puts "Trung bình"
+end
+```
+
+
+##🔹 4. unless
+- Ngược lại với if: chạy khi điều kiện sai.
+```
+unless condition
+  # code khi điều kiện sai
+end
+
+
+Ví dụ:
+unless user.admin?
+  puts "Không có quyền truy cập"
+end
+
+```
+
+##🔹 5. case..when..else
+- Dùng để thay thế nhiều if/elsif.
+```
+case variable
+when value1
+  # code
+when value2
+  # code
+else
+  # mặc định
+end
+
+
+Ví dụ:
+case role
+when "admin"
+  puts "Quản trị viên"
+when "editor"
+  puts "Biên tập viên"
+else
+  puts "Người dùng"
+end
+```
+
+
+## 🔹 6. Toán tử điều kiện (?:)
+- Viết ngắn gọn cho if..else.
+
+```
+condition ? value_if_true : value_if_false
+
+
+Ví dụ:
+message = age >= 18 ? "Đủ tuổi" : "Chưa đủ tuổi"
+
+```
+
+## 🔹 7. Modifier if / unless
+- Viết ngắn gọn sau câu lệnh.
+```
+puts "Xin chào" if logged_in?
+puts "Không được phép" unless user.admin?
+
+```
+
+## 🔹 8. Rails Helpers liên quan đến điều kiện
+Rails bổ sung nhiều helper để viết điều kiện gọn hơn:
+
+```
+- present? / blank?
+if params[:name].present?
+  puts "Có tên"
+end
+- any? / empty?
+puts "Danh sách rỗng" if users.empty?
+- try
+user.try(:profile).try(:address)
+
+```
+
+## ✅ Tóm lại
+Các loại điều kiện trong Ruby on Rails gồm:
+- Cơ bản: if, if..else, if..elsif..else, unless
+- Phân nhánh: case..when..else
+- Ngắn gọn: toán tử ?:, modifier if/unless
+- Rails helpers: present?, blank?, any?, empty?, try
+
+
+
+
