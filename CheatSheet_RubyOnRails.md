@@ -43,6 +43,53 @@
 - `reject` – loại bỏ
 - `find` – tìm phần tử đầu tiên
 
+### 🔑 Các hàm thao tác với mảng trong Ruby
+```📌 Lấy phần tử
+- arr.first(n) → lấy n phần tử đầu tiên.
+- arr.last(n) → lấy n phần tử cuối cùng.
+- arr.take(n) → giống first(n), lấy n phần tử đầu.
+- arr.drop(n) → bỏ qua n phần tử đầu, trả về phần còn lại.
+- arr[0...n] → cú pháp slicing, lấy từ index 0 đến n-1.
+- arr[range] → lấy theo khoảng, ví dụ arr[2..5].
+
+📌 Chia mảng
+- arr.slice(start, length) → lấy từ vị trí start với độ dài length.
+- arr.each_slice(n) → chia mảng thành các nhóm con có n phần tử.
+- arr.in_groups_of(n) (Rails) → chia thành nhóm con có n phần tử, tự thêm nil nếu thiếu.
+
+📌 Lọc và chọn
+- arr.select { |x| ... } → chọn phần tử thỏa điều kiện.
+- arr.reject { |x| ... } → bỏ phần tử thỏa điều kiện.
+- arr.filter_map { |x| ... } → vừa lọc vừa map.
+
+📌 Biến đổi
+- arr.map { |x| ... } → biến đổi từng phần tử.
+- arr.collect { |x| ... } → giống map.
+- arr.flatten → làm phẳng mảng nhiều chiều.
+- arr.compact → bỏ nil.
+
+📌 Sắp xếp & tìm kiếm
+- arr.sort → sắp xếp tăng dần.
+- arr.sort_by { |x| ... } → sắp xếp theo tiêu chí.
+- arr.find { |x| ... } → tìm phần tử đầu tiên thỏa điều kiện.
+- arr.detect { |x| ... } → giống find.
+
+📌 Rails mở rộng
+- arr.in_groups(n) → chia thành n nhóm gần bằng nhau.
+- arr.split(value) → chia mảng thành các nhóm, cắt khi gặp value.
+
+Example
+arr = (1..10).to_a
+
+arr.first(3)      # => [1, 2, 3]
+arr.last(2)       # => [9, 10]
+arr.take(4)       # => [1, 2, 3, 4]
+arr.drop(4)       # => [5, 6, 7, 8, 9, 10]
+arr[2..5]         # => [3, 4, 5, 6]
+arr.each_slice(3).to_a  # => [[1,2,3],[4,5,6],[7,8,9],[10]]
+arr.in_groups_of(4)     # => [[1,2,3,4],[5,6,7,8],[9,10,nil,nil]]
+```
+
 ## 5. Hash
 - `key?` – có key không
 - `value?` – có value không
