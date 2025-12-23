@@ -368,4 +368,48 @@ Các loại điều kiện trong Ruby on Rails gồm:
 
 
 
+# Debug trong Ruby on Rails
+
+## 1. Hàm `debug`
+- Dùng để hiển thị nội dung của biến dưới dạng YAML trong view.
+- Ví dụ:
+  ```erb
+  <%= debug @post %>
+```
+
+- Kết quả: In ra toàn bộ thông tin của @post trong trình duyệt.
+
+## 2. Hàm inspect
+- Trả về chuỗi mô tả đối tượng.
+- Ví dụ:
+```
+puts @post.inspect]
+```
+- Kết quả: In ra thông tin đối tượng trong terminal.
+
+## 3. Dùng logger
+- Rails có sẵn Rails.logger để ghi log.
+- Ví dụ:
+```
+Rails.logger.debug "Giá trị của @post: #{@post.inspect}"
+```
+- Log sẽ xuất hiện trong file log/development.log.
+
+## 4. Dùng gem byebug
+- Thêm byebug vào code để dừng chương trình tại điểm đó và mở session debug.
+- Ví dụ:
+```
+def show
+  byebug
+  @post = Post.find(params[:id])
+end
+```
+- Khi chạy, Rails sẽ dừng tại dòng byebug và cho phép bạn kiểm tra biến trong terminal.
+
+## 5. Rails Console
+- Chạy rails console để tương tác trực tiếp với ứng dụng.
+- Có thể thử nghiệm, kiểm tra dữ liệu, gọi method ngay trong môi trường thực tế.
+
+
+
 
