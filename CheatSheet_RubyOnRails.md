@@ -371,13 +371,14 @@ Các loại điều kiện trong Ruby on Rails gồm:
 # Debug trong Ruby on Rails
 
 ## 1. Hàm debug
-- Dùng để hiển thị nội dung của biến dưới dạng YAML trong view.
-- Ví dụ:
+ Dùng để hiển thị nội dung của biến dưới dạng YAML trong view.
+  Ví dụ:
+  
   ```erb
   <%= debug @post %>
-```
+ ```
 
-- Kết quả: In ra toàn bộ thông tin của @post trong trình duyệt.
+Kết quả: In ra toàn bộ thông tin của @post trong trình duyệt.
 
 ## 2. Hàm inspect
 - Trả về chuỗi mô tả đối tượng.
