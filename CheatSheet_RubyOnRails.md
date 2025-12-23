@@ -284,9 +284,7 @@ else
   puts "Trung bình"
 end
 ```
-
-
-##🔹 4. unless
+## 🔹 4. unless
 - Ngược lại với if: chạy khi điều kiện sai.
 ```
 unless condition
@@ -301,7 +299,7 @@ end
 
 ```
 
-##🔹 5. case..when..else
+## 🔹 5. case..when..else
 - Dùng để thay thế nhiều if/elsif.
 ```
 case variable
