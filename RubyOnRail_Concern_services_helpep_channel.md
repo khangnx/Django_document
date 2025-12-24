@@ -25,7 +25,6 @@
   class User < ApplicationRecord
     include SoftDeletable
   end
-  
 ```
 
 ## 🔹 Service Objects
