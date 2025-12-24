@@ -7,7 +7,9 @@
   - Các method tái sử dụng được ở nhiều nơi (ví dụ: `soft_delete`, `publishable`, `trackable`).
   - Không chứa business logic phức tạp, chỉ nên là **hành vi chung**.
 - **Ví dụ**:
-  ```ruby
+  
+  ```
+  ruby
   module SoftDeletable
     extend ActiveSupport::Concern
 
@@ -23,6 +25,7 @@
   class User < ApplicationRecord
     include SoftDeletable
   end
+  
 ```
 
 ## 🔹 Service Objects
