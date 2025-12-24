@@ -56,7 +56,7 @@ Duyệt từng phần tử
 Cho thêm index
 Trả về chính array ban đầu, KHÔNG tạo mảng mới
 ### 👉 map:
-Biến đ
+Biến đổi
 Trả về mảng mới
 => Tức là với code trên sẽ duyệt qua mãng animals biến mảng thành dạng  "#{index}:#{item}" và trả về mảng animals mới với format "#{index}:#{item} và đã drop bỏ đi số phần tử = với skip tính từ đầu mảng
 
