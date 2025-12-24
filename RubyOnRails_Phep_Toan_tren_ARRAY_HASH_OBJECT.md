@@ -102,7 +102,7 @@ counter = Hash.new(0)
 counter[:apple] += 1
 counter[:apple] += 1
 ```
-### 2.6 Lấy size của hash (mảng)
+### 2.6 Lấy size của hash 
 ```
 hash.size    # 3
 hash.length  # 3
