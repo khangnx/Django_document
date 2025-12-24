@@ -52,12 +52,11 @@ def skip_animals(animals, skip)
 end
 ```
 ### 👉 each_with_index:
-Duyệt từng phần tử
-Cho thêm index
-Trả về chính array ban đầu, KHÔNG tạo mảng mới
+- Cho thêm index
+- Trả về chính array ban đầu, KHÔNG tạo mảng mới
 ### 👉 map:
-Biến đổi
-Trả về mảng mới
+- Biến đổi
+- Trả về mảng mới
 => Tức là với code trên sẽ duyệt qua mãng animals biến mảng thành dạng  "#{index}:#{item}" và trả về mảng animals mới với format "#{index}:#{item} và đã drop bỏ đi số phần tử = với skip tính từ đầu mảng
 
 ### 1.4 Biến đổi
