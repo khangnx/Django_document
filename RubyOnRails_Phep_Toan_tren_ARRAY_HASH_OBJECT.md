@@ -58,6 +58,14 @@ arr.find { |x| x > 2 }
 [1,2,3] & [2,3,4]
 [1,2,3] | [3,4]
 ```
+### 1.6 Lấy size của Array (mảng)
+```
+arr.size    # 4
+arr.length  # 4
+arr.count   # 4
+Khi có điều kiện thì dùng count
+arr.count { |x| x.even? }
+```
 ## 2. Hash
 ### 2.1 Truy cập & gán
 ```
@@ -93,6 +101,15 @@ hash.transform_values(&:to_s)
 counter = Hash.new(0)
 counter[:apple] += 1
 counter[:apple] += 1
+```
+### 2.6 Lấy size của hash (mảng)
+```
+hash.size    # 3
+hash.length  # 3
+hash.count   # 3
+Khi có điều kiện thì dùng count
+hash.count { |k, v| v > 1 }
+# => 2
 ```
 ## 3. Object
 ### 3.1 Kiểm tra
