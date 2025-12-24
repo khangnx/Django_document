@@ -302,7 +302,16 @@ Ví dụ:
 [1,2,3,4] → 10
 
 [1,2,3,4] → 24
++++++++++++++++++++++++
+Ví dụ nâng cao về reduce
+reduce(1, :*) nghĩa là sao?
+Cú pháp đầy đủ:
+reduce(initial_value, symbol)
+Trong đó:
+initial_value = 1 → giá trị ban đầu
+:* → phép nhân
 
+============================
 
 arr.inject(:+)
 # => 100
