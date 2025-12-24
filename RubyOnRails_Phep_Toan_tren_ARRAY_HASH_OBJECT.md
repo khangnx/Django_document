@@ -295,9 +295,22 @@ arr.min_by { |x| x }
 
 arr.reduce(0) { |s, x| s + x }
 # => 100
+reduce = gộp nhiều phần tử → 1 giá trị duy nhất
+
+Ví dụ:
+
+[1,2,3,4] → 10
+
+[1,2,3,4] → 24
+
 
 arr.inject(:+)
 # => 100
+
+
+
+{a:1,b:2} → "a=1,b=2"
+
 ```
 
 ---
