@@ -185,3 +185,333 @@ users.group_by(&:role)
 - Enumerable: xử lý dữ liệu
 
 - Rails helpers: code gọn & sạch
+
+
+
+# Ruby Array & Hash – Tổng Hợp Đầy Đủ (Giữ Nguyên Nội Dung + Ví Dụ)
+
+Tài liệu này **giữ nguyên toàn bộ nội dung đã giải thích ở trên**, bao gồm **tất cả phép toán Array & Hash trong Ruby / Ruby on Rails kèm ví dụ cụ thể**, dùng để học, tra cứu nhanh hoặc làm README.
+
+---
+
+# 📦 ARRAY – TẤT CẢ PHÉP TOÁN (KÈM VÍ DỤ)
+
+```ruby
+arr = [10, 20, 30, 40]
+```
+
+---
+
+## 1️⃣ Truy cập phần tử
+
+```ruby
+arr[0]        # => 10
+arr[-1]       # => 40
+arr.first     # => 10
+arr.last      # => 40
+arr[1, 2]     # => [20, 30]
+arr[1..3]     # => [20, 30, 40]
+arr.at(2)     # => 30
+arr.fetch(10, 0) # => 0 (an toàn)
+```
+
+---
+
+## 2️⃣ Thêm / Xóa phần tử
+
+```ruby
+arr << 50           # => [10, 20, 30, 40, 50]
+arr.push(60)        # => [10, 20, 30, 40, 50, 60]
+arr.unshift(5)      # => [5, 10, 20, 30, 40, 50, 60]
+
+arr.pop             # => 60
+arr.shift           # => 5
+arr.delete(20)      # => xóa giá trị 20
+arr.delete_at(1)    # => xóa index 1
+arr.clear           # => []
+```
+
+---
+
+## 3️⃣ Duyệt mảng (Iteration)
+
+```ruby
+arr.each { |x| puts x }
+
+arr.each_with_index do |x, i|
+  puts "#{i}: #{x}"
+end
+
+arr.map { |x| x * 2 }
+# => [20, 40, 60, 80]
+
+arr.map! { |x| x + 1 }
+# => thay đổi trực tiếp mảng
+
+arr.select { |x| x > 20 }
+# => [30, 40]
+
+arr.reject { |x| x > 20 }
+# => [10, 20]
+
+arr.find { |x| x > 25 }
+# => 30
+
+arr.find_index { |x| x == 30 }
+# => 2
+
+arr.any? { |x| x > 30 }
+# => true
+
+arr.all? { |x| x > 5 }
+# => true
+
+arr.none? { |x| x < 0 }
+# => true
+
+arr.count { |x| x > 15 }
+# => 3
+```
+
+---
+
+## 4️⃣ Tính toán (Giống `sum`)
+
+```ruby
+arr.sum
+# => 100
+
+arr.sum { |x| x * 2 }
+# => 200
+
+arr.max
+# => 40
+
+arr.min
+# => 10
+
+arr.max_by { |x| -x }
+arr.min_by { |x| x }
+
+arr.reduce(0) { |s, x| s + x }
+# => 100
+
+arr.inject(:+)
+# => 100
+```
+
+---
+
+## 5️⃣ Sắp xếp
+
+```ruby
+arr.sort
+# => [10, 20, 30, 40]
+
+arr.sort.reverse
+# => [40, 30, 20, 10]
+
+users = [{ name: "A", age: 30 }, { name: "B", age: 20 }]
+
+users.sort_by { |u| u[:age] }
+# => [{age:20}, {age:30}]
+
+users.sort_by { |u| -u[:age] }
+# => giảm dần
+```
+
+---
+
+## 6️⃣ Kiểm tra & tìm kiếm
+
+```ruby
+arr.include?(20)  # => true
+arr.empty?        # => false
+arr.size          # => 4
+arr.length        # => 4
+arr.index(30)     # => 2
+```
+
+---
+
+## 7️⃣ Biến đổi mảng
+
+```ruby
+[1, nil, 2].compact
+# => [1, 2]
+
+[1, 1, 2].uniq
+# => [1, 2]
+
+[[1, 2], [3, 4]].flatten
+# => [1, 2, 3, 4]
+
+[1, [2, [3]]].flatten
+# => [1, 2, 3]
+
+[1, 2, 3].join("-")
+# => "1-2-3"
+
+[1, 2].zip([3, 4])
+# => [[1, 3], [2, 4]]
+
+[[1, 2], [3, 4]].transpose
+# => [[1, 3], [2, 4]]
+```
+
+---
+
+## 8️⃣ Phép toán tập hợp
+
+```ruby
+a = [1, 2, 3]
+b = [3, 4]
+
+a + b   # => [1, 2, 3, 3, 4]
+a - b   # => [1, 2]
+a & b   # => [3]
+a | b   # => [1, 2, 3, 4]
+a * 2   # => [1, 2, 3, 1, 2, 3]
+```
+
+---
+
+# 🗂️ HASH – TẤT CẢ PHÉP TOÁN (KÈM VÍ DỤ)
+
+```ruby
+h = { a: 1, b: 2, c: 3 }
+```
+
+---
+
+## 1️⃣ Truy cập
+
+```ruby
+h[:a]            # => 1
+h.fetch(:a)      # => 1
+h.fetch(:x, 0)   # => 0
+h.dig(:a)        # => 1
+h.key(2)         # => :b
+```
+
+---
+
+## 2️⃣ Thêm / Cập nhật / Xóa
+
+```ruby
+h[:d] = 4
+# => {a:1, b:2, c:3, d:4}
+
+h.store(:e, 5)
+
+h.delete(:a)
+# => 1
+
+h.clear
+# => {}
+```
+
+---
+
+## 3️⃣ Duyệt Hash
+
+```ruby
+h.each do |k, v|
+  puts "#{k} = #{v}"
+end
+
+h.each_key { |k| puts k }
+h.each_value { |v| puts v }
+
+h.select { |k, v| v > 1 }
+# => {:b=>2, :c=>3}
+
+h.reject { |k, v| v > 1 }
+# => {:a=>1}
+
+h.map { |k, v| "#{k}:#{v}" }
+# => ["a:1", "b:2", "c:3"]
+```
+
+---
+
+## 4️⃣ Keys / Values
+
+```ruby
+h.keys
+# => [:a, :b, :c]
+
+h.values
+# => [1, 2, 3]
+
+h.to_a
+# => [[:a, 1], [:b, 2], [:c, 3]]
+
+h.size
+# => 3
+
+h.empty?
+# => false
+```
+
+---
+
+## 5️⃣ Merge & Transform
+
+```ruby
+h.merge({ b: 20, d: 4 })
+# => {:a=>1, :b=>20, :c=>3, :d=>4}
+
+h.merge!({ b: 99 })
+# => thay đổi trực tiếp
+
+h.transform_keys { |k| k.to_s }
+# => {"a"=>1, "b"=>2, "c"=>3}
+
+h.transform_values { |v| v * 10 }
+# => {:a=>10, :b=>20, :c=>30}
+
+h.invert
+# => {1=>:a, 2=>:b, 3=>:c}
+```
+
+---
+
+## 6️⃣ Kiểm tra
+
+```ruby
+h.key?(:a)      # => true
+h.value?(2)     # => true
+h.has_key?(:a)  # => true
+h.has_value?(5) # => false
+```
+
+---
+
+## 7️⃣ Hash nâng cao (Rails dùng nhiều)
+
+```ruby
+params = { name: "A", age: 20, role: "admin" }
+
+params.slice(:name, :age)
+# => {:name=>"A", :age=>20}
+
+params.except(:role)
+# => {:name=>"A", :age=>20}
+
+params.deep_symbolize_keys
+params.deep_stringify_keys
+```
+
+---
+
+# 🧠 Ghi nhớ nhanh (Rails Dev)
+
+- Array: `map`, `select`, `sum`, `each_with_index`
+- Hash: `each`, `merge`, `slice`, `transform_keys`
+- Rails DB: **luôn ưu tiên** `Model.sum(:column)` thay vì `map.sum`
+
+---
+
+✅ **Tài liệu này giữ nguyên nội dung + ví dụ đầy đủ như đã giải thích trong chat.**
+
