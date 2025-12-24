@@ -34,6 +34,38 @@
 - Ví dụ: `RecentOrdersQuery.new(user).call`.
 - **Ưu điểm**: Dễ tái sử dụng, tránh lặp lại query.
 
+  #Arel trong Ruby on Rails không phải là một Query Object theo nghĩa pattern mà ta hay dùng trong ứng dụng Rails, nhưng nó có liên quan khá chặt chẽ.
+
+  ## 🔎 Arel là gì?
+  - Arel là một thư viện đi kèm Rails, dùng để xây dựng SQL AST (Abstract Syntax Tree).
+  - Nó cho phép bạn tạo các truy vấn SQL phức tạp bằng Ruby thay vì viết raw SQL.
+  - Ví dụ:
+  ```
+  users = Arel::Table.new(:users)
+  query = users.project(users[:id], users[:name])
+               .where(users[:age].gt(18))
+  query.to_sql
+  # => SELECT "users"."id", "users"."name" FROM "users" WHERE "users"."age" > 18
+  
+  ```
+  
+  ## 🧩 So sánh với Query Object Pattern
+  
+  | Tiêu chí | Arel | Query Object Pattern |
+  |--------|------|---------------------|
+  | **Bản chất** | Thư viện nội bộ của Rails | Pattern do dev tự định nghĩa |
+  | **Mục đích** | Sinh SQL an toàn, linh hoạt | Đóng gói logic query phức tạp |
+  | **Cách dùng** | Dùng trực tiếp trong ActiveRecord | Tạo class riêng, ví dụ `RecentOrdersQuery` |
+  | **Phạm vi** | Toàn bộ Rails (ActiveRecord dựa vào) | Từng ứng dụng cụ thể |
+  
+  
+  
+  ## ✅ Kết luận
+  - Arel không phải là Query Object pattern, mà là công cụ nền tảng để Rails xây dựng query.
+  - Query Object pattern là một cách tổ chức code của bạn, thường dùng Arel/ActiveRecord bên trong để đóng gói logic query.
+  - Nói cách khác: Query Object pattern có thể sử dụng Arel như một “nguyên liệu” để tạo ra các truy vấn phức tạp.
+
+
 ---
 
 ## 6. Observer / Callback
