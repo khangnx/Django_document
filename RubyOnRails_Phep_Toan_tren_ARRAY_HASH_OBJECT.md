@@ -43,6 +43,23 @@ arr.select { |x| x.even? }
 arr.reject { |x| x < 3 }
 arr.find { |x| x > 2 }
 ```
+Cách dùng hay trong mảng:
+```
+def skip_animals(animals, skip)
+  animals.each_with_index.map{ |item, index|
+    "#{index}:#{item}"
+}.drop(skip)
+end
+```
+### 👉 each_with_index:
+Duyệt từng phần tử
+Cho thêm index
+Trả về chính array ban đầu, KHÔNG tạo mảng mới
+### 👉 map:
+Biến đ
+Trả về mảng mới
+=> Tức là với code trên sẽ duyệt qua mãng animals biến mảng thành dạng  "#{index}:#{item}" và trả về mảng animals mới với format "#{index}:#{item} và đã drop bỏ đi số phần tử = với skip tính từ đầu mảng
+
 ### 1.4 Biến đổi
 ```
 [3,1,2].sort
