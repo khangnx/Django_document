@@ -41,8 +41,9 @@ AWS Lambda là dịch vụ serverless computing của Amazon Web Services cho ph
 
     3. Accessing Previous Versions: If you need to revert to an older version, you can simply choose the previous version from the bucket and download it, or even restore it as the current version.
 
-    3. Automate with Scripts: You can use the AWS CLI or SDKs to automate the process, making it easier to manage versions programmatically.
- ```
+    4. Automate with Scripts: You can use the AWS CLI or SDKs to automate the process, making it easier to manage versions programmatically.
+    
+   ```
 
 - API Gateway: nhận request từ client.
 
