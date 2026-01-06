@@ -29,9 +29,11 @@ AWS Lambda là dịch vụ serverless computing của Amazon Web Services cho ph
 - Chi phí có thể tăng nhanh nếu số lượng request lớn.
 
 ## 4. Kiến trúc serverless điển hình
+
 - CodeCommit: là một dịch vụ version control dựa trên Git, được AWS quản lý hoàn toàn.(Chứa source code hoặc có thể dùng GitHub..)
 
  + Để tiết kei65m chi phí có thể dùng S3 để chứa source code(S3 cũng quản lý được version như bên dưới)
+   
     ```
     1. Enable Versioning: Go to your S3 bucket in the AWS Management Console, and enable versioning. Once it’s enabled, every upload will create a new version of that object.
 
@@ -40,7 +42,8 @@ AWS Lambda là dịch vụ serverless computing của Amazon Web Services cho ph
     3. Accessing Previous Versions: If you need to revert to an older version, you can simply choose the previous version from the bucket and download it, or even restore it as the current version.
 
     3. Automate with Scripts: You can use the AWS CLI or SDKs to automate the process, making it easier to manage versions programmatically.
-```
+ ```
+
 - API Gateway: nhận request từ client.
 
 - AWS Lambda: xử lý logic nghiệp vụ.
