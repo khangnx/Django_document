@@ -29,7 +29,7 @@ AWS Lambda là dịch vụ serverless computing của Amazon Web Services cho ph
 - Chi phí có thể tăng nhanh nếu số lượng request lớn.
 
 ## 4. Kiến trúc serverless điển hình
-
+- CodeCommit: là một dịch vụ version control dựa trên Git, được AWS quản lý hoàn toàn.(Chứa source code hoặc có thể dùng GitHub..)
 - API Gateway: nhận request từ client.
 
 - AWS Lambda: xử lý logic nghiệp vụ.
