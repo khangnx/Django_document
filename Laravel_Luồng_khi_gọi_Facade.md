@@ -3,7 +3,7 @@
 ## 📌 Quy trình đầy đủ với Service Provider
 1.	 Service Provider đăng ký Mailer
 
-	-	Trong Illuminate\Mail\MailServiceProvider, Laravel đăng ký binding mailer vào Service C-ntainer.
+	-	Trong Illuminate\Mail\MailServiceProvider, Laravel đăng ký binding mailer vào Service Container.
 	-	Nó cấu hình driver (SMTP, Mailgun, Postmark, v.v.) dựa trên file config/mail.php.
 	
 2.	Người dùng gọi Facade
@@ -19,7 +19,7 @@
 	-	Kết nối tới mail server và gửi email đến người nhận.
 
 
-## 📊 Sơ đồ luồng (có Service Pr-vider)
+## 📊 Sơ đồ luồng (có Service Provider)
 ```
 [User Code: Mail::send]
         |
@@ -43,4 +43,4 @@
 
 ```
 
-## 👉 Như vậy, Service Provider chính là nơi Laravel “gắn” Mailer vào Service Container, đảm bả- Facade có thể truy cập đúng instance.
+## 👉 Như vậy, Service Provider chính là nơi Laravel “gắn” Mailer vào Service Container, đảm bảo Facade có thể truy cập đúng instance.
