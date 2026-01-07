@@ -135,3 +135,31 @@ roles/
 - Playbooks phù hợp cho dự án nhỏ.
 - Roles giúp tổ chức chuyên nghiệp, dễ mở rộng.
 - Có thể triển khai từ dịch vụ đơn giản (Nginx) đến ứng dụng phức tạp (LAMP, WordPress).
+
+
+# So sánh Ansible và terraform
+
+## Ansible và Terraform đều là công cụ DevOps quan trọng nhưng phục vụ mục đích khác nhau: 
+ - Terraform mạnh về provisioning hạ tầng (tạo máy chủ, mạng, database), 
+ - còn Ansible mạnh về configuration management (cài đặt phần mềm, quản lý cấu hình). 
+ Nếu bạn muốn xây dựng hạ tầng từ đầu thì Terraform là lựa chọn tối ưu, còn khi cần quản lý và tự động hóa cấu hình hệ thống thì Ansible phù hợp hơn.
+
+## 🔑 Tổng quan
+- Terraform: Công cụ Infrastructure as Code (IaC) dùng để provisioning hạ tầng trên nhiều nền tảng (AWS, Azure, GCP, VMware…).
+- Ansible: Công cụ Configuration Management dùng để tự động hóa việc cài đặt, cấu hình và triển khai ứng dụng trên máy chủ.
+
+
+## 📌 Khi nào dùng Terraform?
+- Khi cần xây dựng hạ tầng từ đầu: tạo VPC, subnet, VM, database.
+- Khi muốn multi-cloud orchestration: quản lý hạ tầng trên nhiều nền tảng cùng lúc.
+- Khi cần version control cho hạ tầng (state file giúp rollback dễ dàng).
+## 📌 Khi nào dùng Ansible?
+- Khi cần cấu hình hệ thống: cài đặt phần mềm, quản lý user, update packages.
+- Khi triển khai ứng dụng trên nhiều máy chủ.
+- Khi cần CI/CD pipelines để tự động hóa build và deploy.
+
+## ⚠️ Lưu ý & Trade-offs
+- Terraform: mạnh về provisioning nhưng không giỏi trong việc quản lý cấu hình chi tiết của hệ thống.
+- Ansible: dễ dùng cho cấu hình nhưng không có khả năng quản lý state hạ tầng phức tạp.
+- Trong thực tế, nhiều doanh nghiệp kết hợp cả hai: dùng Terraform để tạo hạ tầng, sau đó dùng Ansible để cấu hình và triển khai ứng dụng.
+
