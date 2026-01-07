@@ -2,8 +2,10 @@
 
 ## 📌 Quy trình đầy đủ với Service Provider
 1.	 Service Provider đăng ký Mailer
+
 	-	Trong Illuminate\Mail\MailServiceProvider, Laravel đăng ký binding mailer vào Service C-ntainer.
 	-	Nó cấu hình driver (SMTP, Mailgun, Postmark, v.v.) dựa trên file config/mail.php.
+	
 2.	Người dùng gọi Facade
 	-	Lệnh: Mail::send(...).
 	-	Facade Mail ánh xạ tới binding mailer.
