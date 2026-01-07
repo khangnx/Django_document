@@ -16,10 +16,11 @@
    composer require --dev laravel/dusk
    php artisan dusk:install
    ```
- 2.  ** Tạo test mới**:
+ 2.  **Tạo test mới**:
  ```
 php artisan dusk:make LoginTest
 ```
+3. **Chạy test**:
 ```
 php artisan dusk
 ```
