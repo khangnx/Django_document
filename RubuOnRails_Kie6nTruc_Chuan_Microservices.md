@@ -480,3 +480,59 @@ ALB
 - AppA xử lý nghiệp vụ, trả kết quả về Gateway.
 - Gateway trả response cho client.
 
+# Mô tả 1 luồng cụ thể
+
+# 🔑 Quá trình từ SSO Authentication đến Service
+## 1. Người dùng đăng nhập qua SSO
+• 	Người dùng truy cập ứng dụng → được chuyển hướng đến SSO Provider (ví dụ: Keycloak, Auth0, Azure AD).
+• 	Sau khi xác thực thành công (username/password, MFA…), SSO Provider sinh ra một JWT (JSON Web Token).
+• 	JWT chứa thông tin:
+• 	Header: thuật toán ký (HS256, RS256…).
+• 	Payload: claims (user id, roles, scopes, expiration…).
+• 	Signature: đảm bảo token không bị giả mạo.
+
+## 2. Ứng dụng nhận JWT
+• 	JWT được trả về cho client (browser/mobile app).
+• 	Client lưu token (thường trong localStorage, sessionStorage hoặc secure cookie).
+• 	Mỗi lần gọi API → client gửi JWT trong Authorization Header:
+
+ ``` Authorization: Bearer <jwt_token> ```
+
+
+## 3. API Gateway kiểm tra JWT
+• 	API Gateway là điểm vào duy nhất của hệ thống microservices.
+• 	Gateway thực hiện:
+• 	Xác thực chữ ký: kiểm tra token có hợp lệ không (dùng public key của SSO).
+• 	Kiểm tra thời hạn: token còn hiệu lực không.
+• 	Giải mã claims: lấy thông tin user, roles, scopes.
+• 	Nếu token hợp lệ → Gateway tiếp tục điều phối request đến service tương ứng.
+• 	Nếu token không hợp lệ → trả về 401 Unauthorized.
+
+## 4. Điều phối request đến Service
+• 	Gateway dựa vào routing rules (ví dụ:  → Order Service,  → Payment Service).
+• 	Gateway có thể thêm metadata (user id, roles) vào request header để service sử dụng.
+
+## 5. Service nhận request
+• 	Service nhận request từ Gateway cùng với JWT hoặc thông tin đã được giải mã.
+• 	Service có thể:
+• 	Tin tưởng Gateway (Gateway đã xác thực token).
+• 	Hoặc tự xác thực lại JWT (tùy kiến trúc).
+• 	Service kiểm tra authorization (ví dụ: user có quyền tạo đơn hàng không).
+• 	Nếu hợp lệ → xử lý logic nghiệp vụ và trả kết quả về Gateway → Gateway trả về client.
+
+## 🔄 Tóm tắt luồng
+1. 	User → SSO: đăng nhập, nhận JWT.
+2. 	Client → Gateway: gửi request kèm JWT.
+3. 	Gateway: xác thực JWT, định tuyến request.
+4. 	Service: nhận request, kiểm tra quyền, xử lý.
+5. 	Response: trả kết quả về client.
+
+## 📊 Minh họa luồng (dạng text)
+
+```
+User ----> SSO Provider ----> JWT
+   |                             |
+   |----> API Gateway ----> Service ----> Response
+          (verify JWT)       (authorize)
+```
+
