@@ -40,9 +40,12 @@ $this->app->bind(
 $this->app->when(PhotoController::class)
           ->needs(UserRepository::class)
           ->give(PhotoUserRepository::class);
-		  ```
+
+```
+
 - Method Injection:
 - Ngoài constructor, bạn có thể inject trực tiếp vào method:
+  
 ```
 public function store(Request $request, UserService $service)
 {
