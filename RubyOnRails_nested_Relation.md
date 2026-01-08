@@ -53,6 +53,13 @@ Trong ví dụ mà mình đưa ra:
 
 
 
+
+
+
+
+Rails xử lý validations cho nested attributes bằng cách áp dụng validations trực tiếp trên các model con khi chúng được tạo/cập nhật thông qua accepts_nested_attributes_for. Nếu nested record không hợp lệ, lỗi sẽ được gắn vào parent object và toàn bộ transaction sẽ bị rollback.
+
+🔑 Cách Rails xử lý validations cho nested attributes
 1. Kích hoạt nested attributes
 - Sử dụng accepts_nested_attributes_for trong model cha để cho phép truyền dữ liệu vào các model liên kết.
 - Ví dụ:
