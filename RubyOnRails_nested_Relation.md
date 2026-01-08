@@ -35,12 +35,12 @@ book = Book.create(
 
 ## ➡ Rails sẽ tự động tạo cả Book và các Page liên quan trong một lần gọi.
 
-###🎯 Lợi ích
+### 🎯 Lợi ích
 - Đơn giản hóa form: Bạn có thể dùng fields_for để tạo form cho cả parent và child trong cùng một view.
 - Giữ tính toàn vẹn dữ liệu: Validations chạy xuyên suốt, đảm bảo parent không được lưu nếu child không hợp lệ.
 - Hỗ trợ xóa/bỏ qua: Với allow_destroy và reject_if, bạn có thể linh hoạt xóa hoặc bỏ qua nested records.
 
-##👉 Tóm lại: Nested attributes là cách Rails cho phép bạn quản lý dữ liệu của các model liên kết thông qua parent model, giúp việc tạo/cập nhật dữ liệu phức tạp trở nên gọn gàng và an toàn hơn.
+## 👉 Tóm lại: Nested attributes là cách Rails cho phép bạn quản lý dữ liệu của các model liên kết thông qua parent model, giúp việc tạo/cập nhật dữ liệu phức tạp trở nên gọn gàng và an toàn hơn.
 
 
 
