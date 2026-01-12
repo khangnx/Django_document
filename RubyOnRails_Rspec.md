@@ -96,7 +96,7 @@ expect(response.body).to include('success')
 ```
 
 
-# Kiểm thử validations trong Rails bằng RSpec
+# Cách viết Kiểm thử cho validations trong Rails bằng RSpec
 
 ## 1. Sử dụng gem `shoulda-matchers`
 
