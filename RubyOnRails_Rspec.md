@@ -94,3 +94,66 @@ expect(response).to have_http_status(:ok)
 expect(response.body).to include('success')
 
 ```
+
+
+# Kiểm thử validations trong Rails bằng RSpec
+
+## 1. Sử dụng gem `shoulda-matchers`
+
+Đây là cách **phổ biến nhất** vì ngắn gọn và dễ đọc.
+
+### Ví dụ: Model `Article` có validations
+
+```ruby
+class Article < ApplicationRecord
+  validates :title, presence: true, uniqueness: true
+  validates :content, presence: true, length: { minimum: 10 }
+end
+```
+## Test với RSpec + shoulda-matchers
+
+```
+require 'rails_helper'
+
+RSpec.describe Article, type: :model do
+  it { should validate_presence_of(:title) }
+  it { should validate_uniqueness_of(:title) }
+  it { should validate_presence_of(:content) }
+  it { should validate_length_of(:content).is_at_least(10) }
+end
+```
+## 2. Viết test thủ công (không dùng shoulda-matchers)
+
+- Bạn có thể kiểm tra trực tiếp bằng cách tạo instance và gọi .valid?.
+
+  ```
+  RSpec.describe Article, type: :model do
+  it "is invalid without a title" do
+    article = Article.new(title: nil, content: "Nội dung hợp lệ")
+    expect(article).not_to be_valid
+    expect(article.errors[:title]).to include("can't be blank")
+  end
+
+  it "is invalid if content is too short" do
+    article = Article.new(title: "Tiêu đề", content: "ngắn")
+    expect(article).not_to be_valid
+    expect(article.errors[:content])
+      .to include("is too short (minimum is 10 characters)")
+  end
+end
+```
+## 🚀 Lợi ích khi test validations
+
+- Đảm bảo dữ liệu hợp lệ: Không cho phép lưu dữ liệu sai vào database.
+
+- Phát hiện lỗi sớm: Khi validations thay đổi, test sẽ báo lỗi ngay.
+
+- Tăng độ tin cậy: Codebase ổn định hơn khi có test bao phủ.
+
+## 👉 Kết luận
+
+- Bạn có thể test validations trong Rails model bằng:
+
+### ✅ shoulda-matchers — ngắn gọn, dễ đọc, tiện lợi
+
+### ✅ Test thủ công — kiểm tra chi tiết với .valid? và errors
