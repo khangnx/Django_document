@@ -81,6 +81,36 @@ Dùng cho phân tích và báo cáo. Có thể dùng Data Warehouse (như Snowfl
     - Backend chỉ gửi sự kiện (ví dụ: “Survey mới được tạo”) vào queue/topic.
     - Các consumer (dịch vụ xử lý) đọc dữ liệu từ queue và thực hiện tính toán hoặc lưu vào hệ thống phân tích.
 
+```
+🔄 Quy trình hoạt động
+- Backend phát sinh sự kiện
+Ví dụ: Người dùng tạo một survey mới → Backend gửi thông điệp "SurveyCreated" vào Kafka/RabbitMQ.
+- Broker lưu trữ và phân phối
+Kafka/RabbitMQ giữ sự kiện trong queue/topic. Nó đảm bảo thông điệp không bị mất và có thể phân phối cho nhiều consumer.
+- Consumer xử lý song song
+- Một consumer có thể ghi dữ liệu vào database phân tích.
+- Consumer khác có thể tính toán thống kê hoặc gửi thông báo.
+- Các consumer này chạy độc lập, có thể scale lên nhiều instance để xử lý khối lượng lớn.
+- Kết quả
+- Backend không bị “chặn” bởi xử lý nặng → phản hồi nhanh cho người dùng.
+- Hệ thống có khả năng mở rộng (scalable) vì chỉ cần thêm consumer khi dữ liệu tăng.
+- Có thể đạt near real-time analytics vì dữ liệu được xử lý ngay khi sự kiện xuất hiện.
+
+📊 Ví dụ minh họa
+- Producer (Backend):
+POST /survey
+→ gửi event "SurveyCreated" vào Kafka topic "survey-events"
+- Consumer A: Lưu survey vào hệ thống phân tích.
+- Consumer B: Gửi email thông báo cho admin.
+- Consumer C: Cập nhật dashboard thống kê theo thời gian thực.
+
+🎯 Lợi ích
+- Decoupling: Backend không cần biết ai xử lý sự kiện, chỉ cần gửi đi.
+- Scalability: Có thể thêm/bớt consumer tùy nhu cầu.
+- Reliability: Broker đảm bảo thông điệp không mất.
+- Flexibility: Một sự kiện có thể phục vụ nhiều mục đích khác nhau.
+
+```
 
   - Điều này giúp:
 
