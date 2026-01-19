@@ -247,13 +247,23 @@ if __name__ == "__main__":
 ## Cách chạy thử
 - Cài đặt thư viện:
 
-  ```
+```
 pip install -r requirements.txt
 ```
 
 - Đặt API key:
-- Windows: ``` setx OPENAI_API_KEY "your_key" ```
-- macOS/Linux: ```export OPENAI_API_KEY=your_key```
+- Windows:
+
+  ```
+  setx OPENAI_API_KEY "your_key"
+  ```
+  
+- macOS/Linux:
+
+  ```
+  export OPENAI_API_KEY=your_key
+  ```
+  
 - Chạy Flask:
 
 ```
