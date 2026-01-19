@@ -146,31 +146,39 @@ if __name__ == "__main__":
 ## Cách chạy nhanh
 - Bước 1: Cài đặt thư viện
 - Label: pip
+  
 ```
 pip install flask python-dotenv langchain openai flask-cors
 ```
 - Bước 2: Đặt API key
 - Label: Windows PowerShell
-- 
+  
 ```
 setx OPENAI_API_KEY "YOUR_KEY_HERE"
 ```
 - Label: macOS/Linux (bash)
-  ```
+  
+```
 export OPENAI_API_KEY="YOUR_KEY_HERE"
 ```
+
 - Bước 3: Chạy server
 - Label: run
+  
 ```
 python app.py
 ```
+
 - Gọi thử bằng cURL hoặc Postman- cURL:
+  
 ```
 curl -X POST http://localhost:5000/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"Xin chào, bạn là ai?", "session_id":"user123"}'
 ```
+
 - Kết quả mẫu:
+  
 ```
 {
   "session_id": "user123",
@@ -178,6 +186,7 @@ curl -X POST http://localhost:5000/chat \
   "answer": "Mình là trợ lý AI nói tiếng Việt, sẵn sàng hỗ trợ bạn."
 }
 ```
+
 ## Mở rộng nhanh- Thêm công cụ (tools): Kết nối API nội bộ, cơ sở dữ liệu, tìm kiếm tài liệu (RAG) qua LangChain Tools/Document Loaders.
 - Bảo mật: Thêm rate limiting, xác thực token cho endpoint /chat.
 - Lưu trữ memory: Thay dict bằng Redis hoặc database để giữ ngữ cảnh lâu dài.
