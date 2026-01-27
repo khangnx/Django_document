@@ -222,3 +222,22 @@ $users = User::all();
   * Phòng chống SQL Injection, XSS, CSRF
 
 🚀 Rất phù hợp cho **phỏng vấn Laravel** và **xây dựng API thực tế**
+
+
+
+
+```Laravel không phải framework monolithic. Nó ghép rất nhiều component chất lượng cao:
+
+Laravel dùng	Từ đâu
+Request / Response	Symfony HttpFoundation
+Console	Symfony Console
+Routing base	Symfony Routing (một phần)
+Dependency Injection	Symfony Container
+EventDispatcher	Symfony
+HttpKernel	Symfony
+Validation core	Symfony
+Dotenv	Symfony
+Process	Symfony
+
+👉 Laravel = Symfony components + Laravel DX
+```
