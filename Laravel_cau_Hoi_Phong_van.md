@@ -226,7 +226,9 @@ $users = User::all();
 
 
 
-```Laravel không phải framework monolithic. Nó ghép rất nhiều component chất lượng cao:
+```
+
+Laravel không phải framework monolithic. Nó ghép rất nhiều component chất lượng cao:
 
 Laravel dùng	Từ đâu
 Request / Response	Symfony HttpFoundation
