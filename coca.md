@@ -113,27 +113,27 @@ D) 8 bước
 
 **1.** Em hãy trình bày nguồn gốc và tính chất của vải sợi nhân tạo  
 - **Nguồn gốc:** Được dệt từ các chất hóa học lấy từ gỗ tre, nứa  
-- **Tính chất:** Ít nhàu, có khả năng thấm hút tốt nên mặc thoáng mát  
+- **Tính chất:** Ít nhàu, có khả năng thấm hút kém nên mặc thoáng mát  
 
 **2.** Em hãy trình bày nguồn gốc và tính chất của vải sợi tổng hợp  
 - **Nguồn gốc:** Được dệt từ các chất hóa học lấy từ than đá, dầu mỏ  
 - **Tính chất:** Không bị nhàu, ít thấm mồ hôi nên không thoáng mát khi mặc  
 
 **3.** Trang phục là gì? Trang phục có những vai trò nào?  
-- **Trang phục:** Các loại áo quần và một số vật dụng đi kèm như mũ, giày, tất...  
-- **Vai trò:**  
+- **Trang phục:** Các loại đồ quần và một số vật dụng đi kèm như mũ, giày, tất... Trong đó quần áo là những vật dụng quan trọng nhất.  
+- **Vai trò của trang phục:**  
   + Bảo vệ cơ thể chống lại những tác hại của môi trường  
-  + Làm đẹp cho con người trong mọi hoạt động  
+  + Làm đẹp con người trong mọi hoàn cảnh  
 
-**4.** Các bước là quần áo  
-- **Bước 1:** Chuẩn bị, phân loại quần áo theo chất liệu vải  
+**4.** Em hãy trình bày các bước là quần áo  
+- **Bước 1:** Chuẩn bị: phân loại quần áo theo chất liệu vải  
 - **Bước 2:** Thực hiện  
-  + Điều chỉnh nhiệt độ bàn là phù hợp với từng loại vải  
-  + Là quần áo may bằng loại vải có yêu cầu nhiệt độ thấp trước, loại vải có yêu cầu nhiệt độ cao sau  
+  + Điều chỉnh nhiệt độ của bàn là phù hợp với từng loại vải  
+  + Là quần áo may bằng loại vải có yêu cầu nhiệt độ thấp trước, các loại vải có yêu cầu nhiệt độ cao sau  
 - **Bước 3:** Hoàn tất  
-  + Sau khi là xong, rút phích cắm điện, dựng bàn là cho nguội hẳn trước khi cất vào nơi quy định  
+  + Sau khi là xong, rút ngay phích cắm điện, dựng bàn là cho đúng nơi quy định trước khi cất  
 
-**5.** Mô tả bộ trang phục mặc đi chơi mà em yêu thích nhất  
+**5.** (Học sinh tự mô tả bộ trang phục yêu thích theo yêu cầu)  
 *(Học sinh tự trình bày)*  
 
 **6.** Mô tả bộ trang phục mặc đi dự tiệc mà em yêu thích nhất  
