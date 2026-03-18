@@ -9,7 +9,8 @@
 3. Ví dụ thực tế
 Nova
 - Resource:
-- ```
+  
+  ```
 class UserResource extends Resource {
     public static $model = \App\Models\User::class;
 
@@ -22,9 +23,11 @@ class UserResource extends Resource {
     }
 }
 ```
+
 - Use case: CRM doanh nghiệp, cần dashboard ổn định, metrics, filter phức tạp.
 Filament
 - Form & Table:
+
 ```
 class ProductResource extends Resource {
     public static $model = Product::class;
@@ -44,6 +47,7 @@ class ProductResource extends Resource {
     }
 }
 ```
+
 - Use case: E-commerce startup, cần admin panel nhanh, miễn phí.
 
 4. Ưu nhược điểm
