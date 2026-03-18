@@ -4,7 +4,8 @@
 - Filament: Admin panel mã nguồn mở, miễn phí, hiện đại, dễ tùy biến, cộng đồng mạnh.
 
 2. So sánh tổng quan
-![Uploading image.png…]()
+<img width="687" height="535" alt="image" src="https://github.com/user-attachments/assets/5856a7d3-9ed2-46e6-a52a-e5f2a97a31f9" />
+
 3. Ví dụ thực tế
 Nova
 - Resource:
