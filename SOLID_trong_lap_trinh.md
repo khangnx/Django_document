@@ -76,11 +76,82 @@ Sai: Interface IMachine có print(), scan(), fax().
 
 ## 5. D – Dependency Inversion Principle (Nguyên tắc đảo ngược phụ thuộc)
 
-Ý nghĩa: Lớp cấp cao không nên phụ thuộc trực tiếp vào lớp cấp thấp, mà phụ thuộc vào abstraction.
+Ý nghĩa: các module cấp cao không nên phụ thuộc trực tiếp vào module cấp thấp, mà cả hai nên phụ thuộc vào các abstraction (interface hoặc abstract class). Điều này giúp hệ thống linh hoạt, dễ mở rộng và giảm rủi ro khi thay đổi
+
 Lợi ích: Giảm sự phụ thuộc chặt chẽ, dễ thay đổi và test.
 Ví dụ:
+Code vi phạm nguyên tắt:
 
-Thay vì OrderService gọi trực tiếp MySQLDatabase, hãy dùng IDatabase interface.
+```
+<?php
+class EmailService {
+    public function sendEmail($message) {
+        echo "Sending email: $message";
+    }
+}
+
+class OrderProcessor {
+    private $emailService;
+
+    public function __construct() {
+        $this->emailService = new EmailService();
+    }
+
+    public function processOrder() {
+        // xử lý đơn hàng
+        $this->emailService->sendEmail("Order confirmed!");
+    }
+}
+
+$order = new OrderProcessor();
+$order->processOrder();
+```
+
+==> Cod sua lại không vi phạm nguyên tắt
+
+```
+<?php
+// Abstraction
+interface NotificationService {
+    public function send($message);
+}
+
+// Module cấp thấp
+class EmailService implements NotificationService {
+    public function send($message) {
+        echo "Sending email: $message";
+    }
+}
+
+class SMSService implements NotificationService {
+    public function send($message) {
+        echo "Sending SMS: $message";
+    }
+}
+
+// Module cấp cao
+class OrderProcessor {
+    private $notificationService;
+
+    // Inject qua constructor
+    public function __construct(NotificationService $service) {
+        $this->notificationService = $service;
+    }
+
+    public function processOrder() {
+        // xử lý đơn hàng
+        $this->notificationService->send("Order confirmed!");
+    }
+}
+
+// Sử dụng Email
+$order1 = new OrderProcessor(new EmailService());
+$order1->processOrder();
+
+// Sử dụng SMS
+$order2 = new OrderProcessor(new SMSService());
+$order2->processOrder();
+```
 
 
 # SOLID Principles in Ruby
