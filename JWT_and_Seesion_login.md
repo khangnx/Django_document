@@ -1,6 +1,8 @@
-JWT giống như “thẻ căn cước” mà bạn mang theo, còn Session giống như “chìa khóa phòng khách sạn” do server giữ. JWT tiện lợi cho hệ thống phân tán và API, trong khi Session đơn giản, dễ quản lý và phù hợp với ứng dụng truyền thống.
+- JWT giống như “thẻ căn cước” mà bạn mang theo, còn Session giống như “chìa khóa phòng khách sạn” do server giữ. JWT tiện lợi cho hệ thống phân tán và API, trong khi Session đơn giản, dễ quản lý và phù hợp với ứng dụng truyền thống.
 
 🔑 So sánh JWT và Session
+
+
 <img width="692" height="681" alt="image" src="https://github.com/user-attachments/assets/d30e2476-2922-4072-864e-e022083b0249" />
 
 📌 Ví dụ dễ hiểu
