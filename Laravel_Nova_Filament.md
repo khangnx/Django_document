@@ -65,8 +65,6 @@ Filament
 “Nova là admin panel chính thức, phù hợp cho enterprise app cần sự ổn định. Filament thì miễn phí, dễ tùy biến, cộng đồng mạnh, phù hợp cho startup hoặc dự án nhỏ. Ví dụ: tôi dùng Nova cho CRM doanh nghiệp, còn Filament cho e-commerce startup vì cần tốc độ và chi phí thấp.”
 
 
-
-
 *** Nói về Filament
 - Filament hoạt động theo kiểu: bạn định nghĩa Resource cho mỗi Model, và Resource này sẽ tự động sinh ra các Page (List, Create, Edit) cùng với các Form và Table tương ứng.
 - Ví dụ với User model, bạn sẽ tạo một UserResource để quản lý bảng users. Trong đó, phần table() sẽ định nghĩa cách hiển thị dữ liệu:
@@ -120,6 +118,8 @@ class UserResource extends Resource
     }
 }
 ```
+
+
 👉 Ở đây:
   - UserResource đại diện cho Model User.
   - form() định nghĩa form khi tạo/sửa user.
@@ -178,6 +178,7 @@ routes/
   👉 Như vậy, mỗi Model có một Resource trong Filament để quản lý, và bạn sẽ thấy chúng nằm gọn trong thư mục app/Filament/Resources.
 
   ** Và ta hiều tầng View như sau:
+  
 ```
 app/
   Models/
