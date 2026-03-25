@@ -460,3 +460,42 @@ Request → Redis → JSON → Response
 
 > **Redis chỉ là bộ nhớ key-value, Rails mới là thằng quyết định khi nào cache, khi nào refresh, thông qua TTL, xóa cache, hoặc đổi cache key khi dữ liệu thay đổi.**
 
+
+
+==================================
+
+🔑 Các mô hình caching trong Redis
+1. Cache-Aside (Lazy Loading)
+  - Cách hoạt động: Ứng dụng kiểm tra cache trước. Nếu dữ liệu không có (cache miss), nó sẽ lấy từ database, sau đó ghi vào cache cho lần dùng sau.
+  - Ưu điểm:
+    - Giảm tải database vì chỉ cache dữ liệu khi cần.
+    - Dễ triển khai, phù hợp cho hầu hết ứng dụng.
+  - Nhược điểm:
+    - Lần truy vấn đầu tiên sẽ chậm (cache miss).
+    - Dữ liệu trong cache có thể bị lỗi thời nếu không có cơ chế invalidation.
+
+2. Write-Through
+  - Cách hoạt động: Mỗi khi ứng dụng ghi dữ liệu vào database, nó cũng ghi ngay vào cache, chỉ thành công khi c3 2 ghi xong và thành công.
+  - Ưu điểm:
+    - Cache luôn đồng bộ với database.
+    - Truy vấn sau đó nhanh vì dữ liệu đã có sẵn trong cache.
+  - Nhược điểm:
+    - Tốn chi phí ghi kép (database + cache).
+    - Nếu dữ liệu ít được đọc lại, cache có thể chứa nhiều dữ liệu không cần thiết.
+
+3. Write-Behind (Write-Back)
+  - Cách hoạt động: Ứng dụng ghi dữ liệu vào cache, Redis sẽ cập nhật database sau (thường theo batch hoặc định kỳ).
+  - Ưu điểm:
+    - Hiệu năng ghi cao vì ứng dụng chỉ ghi vào cache.
+    - Giảm tải database nhờ ghi theo lô.
+  - Nhược điểm:
+    - Nguy cơ mất dữ liệu nếu cache bị crash trước khi đồng bộ.
+    - Độ trễ đồng bộ cao, database có thể không phản ánh ngay dữ liệu mới nhất.
+   
+📌 Lời khuyên
+  - Cache-Aside: phù hợp cho ứng dụng đọc nhiều, ghi ít (ví dụ: website tin tức, e-commerce).
+  - Write-Through: tốt cho hệ thống cần dữ liệu nhất quán cao (ví dụ: tài chính, ngân hàng).
+  - Write-Behind: hữu ích khi ghi nhiều, đọc ít và chấp nhận độ trễ (ví dụ: logging, analytics).
+
+
+
