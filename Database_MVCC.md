@@ -30,3 +30,10 @@
   • 	Phức tạp hơn: So với cơ chế khóa truyền thống, MVCC đòi hỏi quản lý phiên bản tinh vi.
 
 👉 Tóm lại, MVCC là giải pháp hiện đại giúp hệ quản trị cơ sở dữ liệu vừa đảm bảo tính nhất quán, vừa tăng hiệu suất xử lý giao dịch đồng thời. 
+
+Trong MVCC có: Isolation Levels: 4 Cấp Độ Giúp Database Vừa Nhanh, Vừa Chính Xác
+
+<img width="781" height="387" alt="image" src="https://github.com/user-attachments/assets/31d01f35-c12e-475a-a51a-565cb1857068" />
+
+
+
