@@ -64,6 +64,8 @@ Filament
 👉 Trong phỏng vấn, bạn có thể nói:
 “Nova là admin panel chính thức, phù hợp cho enterprise app cần sự ổn định. Filament thì miễn phí, dễ tùy biến, cộng đồng mạnh, phù hợp cho startup hoặc dự án nhỏ. Ví dụ: tôi dùng Nova cho CRM doanh nghiệp, còn Filament cho e-commerce startup vì cần tốc độ và chi phí thấp.”
 
+=============================================================
+
 
 *** Nói về Filament
 - Filament hoạt động theo kiểu: bạn định nghĩa Resource cho mỗi Model, và Resource này sẽ tự động sinh ra các Page (List, Create, Edit) cùng với các Form và Table tương ứng.
