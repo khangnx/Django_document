@@ -20,6 +20,34 @@ Ví dụ:
 
 Dùng interface hoặc abstract class để thêm tính năng mới mà không sửa lớp cũ.
 
+```
+class Shape {
+    constructor(protected width: number, protected height: number) {}
+    getArea(): number {
+        return this.width * this.height;
+    }
+}
+```
+
+- Nếu muốn thêm hình tròn, ta phải sửa trực tiếp class Shape → vi phạm nguyên lý.
+==> Để tuân thủ ta : Thêm hình mới chỉ cần tạo class mới kế thừa Shape, không cần sửa code cũ.
+
+```
+abstract class Shape {
+    abstract getArea(): number;
+}
+
+class Rectangle extends Shape {
+    constructor(private width: number, private height: number) { super(); }
+    getArea(): number { return this.width * this.height; }
+}
+
+class Circle extends Shape {
+    constructor(private radius: number) { super(); }
+    getArea(): number { return Math.PI * this.radius * this.radius; }
+}
+```
+
 
 
 
