@@ -82,7 +82,7 @@ Lợi ích: Giảm sự phụ thuộc chặt chẽ, dễ thay đổi và test.
 Ví dụ:
 Code vi phạm nguyên tắt:
 
-=>  Ở đây  phụ thuộc trực tiếp vào . Nếu muốn đổi sang SMS, ta phải sửa code trong .
+=>  Ở đây OrderProcessor  phụ thuộc trực tiếp vào EmailService  . Nếu muốn đổi sang SMS, ta phải sửa code trong OrderProcessor .
 
 ```
 <?php
