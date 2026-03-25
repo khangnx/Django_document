@@ -101,6 +101,13 @@ $user->roles;
 ## 5. Query Scopes trong Eloquent
 
 ### 🔹 Local Scope
+- Định nghĩa: Là một method trong model bắt đầu bằng scope, ví dụ scopeActive($query).
+- Cách dùng: Gọi thủ công khi query, ví dụ User::active()->get().
+- Ưu điểm: Dễ tái sử dụng, chỉ áp dụng khi bạn muốn.
+- Nhược điểm: Phải nhớ gọi, không tự động.
+- 👉 Chỉ những nơi bạn gọi active() mới lọc theo điều kiện này
+
+
 
 ```php
 public function scopeActive($query)
@@ -112,6 +119,13 @@ User::active()->get();
 ```
 
 ### 🔹 Global Scope
+- Định nghĩa: Là một class hoặc closure gắn vào model, áp dụng cho mọi query.
+- Cách dùng: Đăng ký trong booted() của model.
+- Ưu điểm: Tự động áp dụng, đảm bảo tính nhất quán.
+- Nhược điểm: Có thể gây khó hiểu nếu quên rằng scope đang chạy ngầm.
+👉 Dù bạn không gọi gì thêm, mọi query với User đều tự động lọc theo status = active
+
+
 
 ```php
 use Illuminate\Database\Eloquent\Builder;
