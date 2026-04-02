@@ -239,6 +239,23 @@ Sustainable motivation comes from seeing personal growth.
 
 ---
 
+# Can you describe a situation where you had to make a difficult decision that impacted the project timeline, and how did you handle it?
+- Trong một dự án, tôi phát hiện một module quan trọng có nhiều rủi ro bảo mật. Tôi quyết định trì hoãn việc release để đội có thêm thời gian refactor và viết test. Dù timeline bị ảnh hưởng, quyết định này giúp sản phẩm ổn định và tránh lỗi nghiêm trọng về sau
+
+---
+
+# How do you ensure that your team maintains high code quality and consistency over time?
+
+- Code review bắt buộc: Mọi pull request đều phải được ít nhất một thành viên khác xem xét để phát hiện bug, cải thiện logic và đảm bảo tuân thủ chuẩn coding.
+- Quy chuẩn coding rõ ràng: Sử dụng linter, formatter (như ESLint, Prettier) và style guide thống nhất để tránh sự khác biệt về cú pháp và cách viết.
+- Testing tự động: Viết unit test, integration test, và end-to-end test để đảm bảo code hoạt động đúng và giảm rủi ro khi refactor.
+- CI/CD pipeline: Tích hợp kiểm thử và kiểm tra chất lượng vào pipeline để phát hiện lỗi sớm trước khi code lên production.
+- Documentation đầy đủ: Ghi chú rõ ràng trong code và duy trì tài liệu kỹ thuật để giúp thành viên mới dễ dàng nắm bắt.
+- Refactoring định kỳ: Không để “nợ kỹ thuật” tích tụ quá lâu, thường xuyên cải thiện cấu trúc code.
+- Mentoring & knowledge sharing: Tổ chức buổi chia sẻ nội bộ, pair programming để lan tỏa best practices trong đội.
+
+
+
 # ⭐ Câu chốt mạnh khi phỏng vấn
 
 "I focus on building systems and teams that can scale, not just delivering features."
