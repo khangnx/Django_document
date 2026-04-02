@@ -254,6 +254,12 @@ Sustainable motivation comes from seeing personal growth.
 - Refactoring định kỳ: Không để “nợ kỹ thuật” tích tụ quá lâu, thường xuyên cải thiện cấu trúc code.
 - Mentoring & knowledge sharing: Tổ chức buổi chia sẻ nội bộ, pair programming để lan tỏa best practices trong đội.
 
+---
+
+# How do you approach mentoring junior developers on your team, and what strategies do you use to help them grow effectively
+
+- Tôi thường hướng dẫn junior bằng cách pair programming, review code chi tiết và giải thích lý do đằng sau các quyết định kỹ thuật. Ngoài ra, tôi khuyến khích họ đặt câu hỏi, giao cho những task phù hợp để rèn luyện, và tổ chức buổi chia sẻ kiến thức để họ phát triển nhanh hơn.
+
 
 
 # ⭐ Câu chốt mạnh khi phỏng vấn
