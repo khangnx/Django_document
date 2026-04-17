@@ -157,3 +157,48 @@ end
 ### ✅ shoulda-matchers — ngắn gọn, dễ đọc, tiện lợi
 
 ### ✅ Test thủ công — kiểm tra chi tiết với .valid? và errors
+
+
+
+=======================================================================================================================================
+
+# Tổng hợp Kiến thức Mocking & Data Generation trong RSpec
+
+## 1. Thư viện tạo dữ liệu (Test Data)
+Để thay thế cho Fixtures mặc định của Rails, cộng đồng thường dùng bộ đôi:
+
+* **Factory Bot**: Dùng để định nghĩa các "khuôn mẫu" (factories) tạo Object.
+* **Faker**: Dùng để tạo các giá trị ngẫu nhiên (tên, email, số điện thoại...) để dữ liệu trông thật hơn.
+
+```ruby
+# spec/factories/users.rb
+FactoryBot.define do
+  factory :user do
+    full_name { Faker::Name.name }
+    email { Faker::Internet.email }
+    role { "customer" }
+  end
+end
+
+# Cách dùng trong test:
+user = create(:user) # Tạo và lưu vào DB
+user_tmp = build(:user) # Chỉ khởi tạo trong RAM, chưa lưu DB
+```
+
+## 2. Mocking và Stubbing (RSpec Mocks)
+RSpec cung cấp sẵn công cụ để giả lập hành vi mà không cần cài thêm thư viện ngoài.
+
+**Mock Instance Method (Phương thức của đối tượng)**
+Sử dụng khi bạn muốn một đối tượng cụ thể trả về kết quả giả.
+
+```
+allow(User).to receive(:active_count).and_return(100)
+```
+
+**Mock "Bất kỳ" Instance nào**
+Sử dụng khi bạn không nắm giữ biến đối tượng (đối tượng được tạo bên trong logic của hàm khác).
+
+```
+allow_any_instance_of(User).to receive(:save).and_return(false)
+```
+
