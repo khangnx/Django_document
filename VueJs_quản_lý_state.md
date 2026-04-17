@@ -14,7 +14,8 @@ Dành cho dự án ít trang hoặc logic đơn giản.
 * **Simple Store (Composition API):** Sử dụng `reactive` hoặc `ref` trong một file JS riêng biệt để chia sẻ dữ liệu toàn cục.
 
 **Ví dụ Simple Store:**
-```javascript
+```
+javascript
 // stores/simpleStore.js
 import { reactive } from 'vue';
 
@@ -24,6 +25,7 @@ export const globalStore = reactive({
     this.count++;
   }
 });
+```
 
 ### B. Hệ thống vừa và lớn (Pinia)
 Pinia là thư viện quản lý state chính thức cho Vue 3, hỗ trợ tốt cho hệ thống lớn nhờ tính mô-đun và công cụ debug mạnh mẽ.
