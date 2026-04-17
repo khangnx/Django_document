@@ -141,6 +141,7 @@ end
       .to include("is too short (minimum is 10 characters)")
   end
 end
+
 ```
 
 
@@ -173,7 +174,8 @@ end
 * **Factory Bot**: Dùng để định nghĩa các "khuôn mẫu" (factories) tạo Object.
 * **Faker**: Dùng để tạo các giá trị ngẫu nhiên (tên, email, số điện thoại...) để dữ liệu trông thật hơn.
 
-```ruby
+```
+ruby
 # spec/factories/users.rb
 FactoryBot.define do
   factory :user do
