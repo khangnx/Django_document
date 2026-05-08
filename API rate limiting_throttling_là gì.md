@@ -1,88 +1,429 @@
-```API rate limiting/throttling là cơ chế kiểm soát lưu lượng truy cập vào một API để đảm bảo hệ thống hoạt động ổn định, tránh bị quá tải. Nó đề cập đến việc giới hạn số lượng request mà một client có thể gửi trong một khoảng thời gian nhất định.
+# API Rate Limiting / Throttling trong Microservices với Laravel / Ruby on Rails trên AWS
 
-📌 Ý nghĩa chính
-Rate limiting: Đặt ngưỡng tối đa cho số request (ví dụ: 100 request/phút). Nếu vượt quá, hệ thống sẽ từ chối hoặc trả về lỗi (thường là HTTP 429 Too Many Requests).
+API rate limiting/throttling là cơ chế kiểm soát lưu lượng truy cập vào một API để đảm bảo hệ thống hoạt động ổn định, tránh bị quá tải. Nó đề cập đến việc giới hạn số lượng request mà một client có thể gửi trong một khoảng thời gian nhất định.
 
-Throttling: Điều chỉnh tốc độ xử lý request, có thể làm chậm hoặc phân bổ đều các request thay vì chặn hẳn.
+---
 
-⚙️ Mục đích
-Bảo vệ API khỏi bị lạm dụng hoặc tấn công (ví dụ: DDoS).
+## 📌 Ý nghĩa chính
 
-Đảm bảo tài nguyên hệ thống được phân bổ công bằng giữa nhiều người dùng.
+### Rate limiting
+Đặt ngưỡng tối đa cho số request  
+Ví dụ: `100 request/phút`
 
-Giữ cho hiệu năng ổn định, tránh tình trạng nghẽn mạng hoặc server quá tải.
+Nếu vượt quá, hệ thống sẽ từ chối hoặc trả về lỗi:
 
-🛠️ Ví dụ thực tế
-Một dịch vụ email API cho phép tối đa 500 email/ngày cho mỗi tài khoản.
-
-Một API thời tiết chỉ cho phép 60 request/phút để tránh việc người dùng liên tục spam dữ liệu.
-
-👉 Nói ngắn gọn: Rate limiting/throttling là cách để kiểm soát tần suất gọi API nhằm bảo vệ hệ thống và đảm bảo công bằng cho tất cả người dùng.
+```http
+HTTP 429 Too Many Requests
 ```
 
-Vậy một hệ thống microservices dùng Laravel hoac ruby on rails thì làm sao triển khai cơ chế này ? Nếu dùng AWS
-Triển khai rate limiting/throttling trong hệ thống microservices dùng Laravel hoặc Ruby on Rails trên AWS có nhiều cách, tùy vào mức độ bạn muốn kiểm soát ở application layer hay infrastructure layer.
+### Throttling
+Điều chỉnh tốc độ xử lý request, có thể:
 
-🛠️ 1. Ở Application Layer (Laravel / Rails)
-Middleware:
+- Làm chậm request
+- Xếp hàng request
+- Phân bổ đều request
 
-Laravel có sẵn middleware ThrottleRequests để giới hạn số request theo thời gian. Bạn có thể cấu hình trong routes/api.php như:
+Thay vì chặn hoàn toàn.
 
-php
+---
+
+## ⚙️ Mục đích
+
+- Bảo vệ API khỏi bị lạm dụng hoặc tấn công (DDoS, spam)
+- Đảm bảo tài nguyên được phân bổ công bằng
+- Giữ hiệu năng hệ thống ổn định
+- Tránh quá tải database/server
+- Kiểm soát chi phí hạ tầng cloud
+
+---
+
+## 🛠️ Ví dụ thực tế
+
+### Ví dụ 1 — Email API
+Cho phép tối đa:
+
+```text
+500 email/ngày
+```
+
+cho mỗi tài khoản.
+
+---
+
+### Ví dụ 2 — Weather API
+Cho phép:
+
+```text
+60 request/phút
+```
+
+để tránh spam request liên tục.
+
+---
+
+# 🚀 Triển khai trong hệ thống Microservices dùng Laravel hoặc Ruby on Rails trên AWS
+
+Có thể triển khai ở:
+
+1. Application Layer
+2. Infrastructure Layer
+
+Thông thường production sẽ kết hợp cả hai.
+
+---
+
+# 🧩 1. Application Layer (Laravel / Rails)
+
+---
+
+## Laravel
+
+Laravel có sẵn middleware:
+
+```php
+ThrottleRequests
+```
+
+Ví dụ:
+
+```php
 Route::middleware('throttle:60,1')->group(function () {
     Route::get('/users', 'UserController@index');
 });
-→ Giới hạn 60 request mỗi phút cho route này.
+```
 
-Rails có thể dùng gem như Rack::Attack để định nghĩa rule rate limiting:
+Ý nghĩa:
 
-ruby
+```text
+60 request / 1 phút
+```
+
+---
+
+### Theo user hoặc API token
+
+```php
+RateLimiter::for('api', function (Request $request) {
+    return Limit::perMinute(100)->by($request->user()?->id ?: $request->ip());
+});
+```
+
+Có thể limit theo:
+
+- User ID
+- API key
+- IP address
+- Tenant
+- Subscription plan
+
+---
+
+## Ruby on Rails
+
+Rails thường dùng gem:
+
+```ruby
+rack-attack
+```
+
+Ví dụ:
+
+```ruby
 Rack::Attack.throttle('req/ip', limit: 60, period: 1.minute) do |req|
   req.ip
 end
-→ Giới hạn 60 request/phút theo IP.
+```
 
-Token bucket / Leaky bucket algorithm:
-Nếu cần kiểm soát phức tạp hơn (ví dụ: phân biệt user tier: free vs premium), bạn có thể tự implement bằng Redis để lưu số lượng request và reset theo thời gian.
+Ý nghĩa:
 
-☁️ 2. Ở Infrastructure Layer (AWS)
-AWS cung cấp nhiều dịch vụ hỗ trợ rate limiting mà bạn có thể tận dụng:
+```text
+60 request/phút theo IP
+```
 
+---
+
+## Redis-based Rate Limiting
+
+Khi microservices scale lớn, thường dùng:
+
+```text
+Redis + Token Bucket / Leaky Bucket
+```
+
+để shared state giữa nhiều instance/container.
+
+---
+
+## Token Bucket Algorithm
+
+Ý tưởng:
+
+- Mỗi user có một bucket token
+- Request sẽ consume token
+- Token tự refill theo thời gian
+- Hết token → reject request
+
+---
+
+## Leaky Bucket Algorithm
+
+Ý tưởng:
+
+- Request đi vào queue
+- Xử lý với tốc độ cố định
+- Nếu queue đầy → reject
+
+Giúp traffic mượt hơn.
+
+---
+
+# ☁️ 2. Infrastructure Layer trên AWS
+
+---
+
+# AWS API Gateway
+
+Đây là nơi phổ biến nhất để triển khai rate limiting.
+
+---
+
+## API Gateway Usage Plans
+
+Có thể cấu hình:
+
+- Requests/second
+- Burst limit
+- Requests/day
+- Requests/month
+
+Ví dụ:
+
+```text
+100 req/sec
+Burst: 200
+Quota: 1,000,000/month
+```
+
+---
+
+## API Keys
+
+Có thể tạo API key riêng cho từng client:
+
+- Mobile app
+- Web app
+- Partner API
+- Premium customer
+
+Mỗi key có limit riêng.
+
+---
+
+# AWS WAF (Web Application Firewall)
+
+WAF hỗ trợ:
+
+- IP rate limiting
+- Anti-DDoS
+- Bot protection
+
+Ví dụ:
+
+```text
+Block IP nếu > 2000 request / 5 phút
+```
+
+---
+
+## Kiến trúc thường dùng
+
+```text
+Internet
+   ↓
+AWS WAF
+   ↓
 API Gateway
+   ↓
+ALB
+   ↓
+ECS / EKS / EC2
+   ↓
+Laravel / Rails Microservices
+```
 
-Cho phép cấu hình Usage Plans và API Keys để giới hạn số request/second hoặc request/day cho từng client.
+---
 
-Tích hợp dễ dàng với Lambda, ECS, hoặc backend Laravel/Rails.
+# Redis với AWS ElastiCache
 
-AWS WAF (Web Application Firewall)
+Khi cần:
 
-Có thể đặt rule để giới hạn số request từ một IP trong khoảng thời gian nhất định.
+- Shared rate limiting
+- Distributed throttling
+- Multi-instance consistency
 
-Hữu ích để chống DDoS hoặc spam.
+thì dùng:
 
-Elastic Load Balancer (ALB/NLB)
+```text
+AWS ElastiCache Redis
+```
 
-Không có rate limiting trực tiếp, nhưng có thể kết hợp với WAF hoặc API Gateway để kiểm soát.
+---
 
-Redis/Memcached trên ElastiCache
+## Flow hoạt động
 
-Dùng để lưu trạng thái request count cho từng user/IP, triển khai custom throttling logic.
+```text
+Request đến service
+    ↓
+Check Redis counter
+    ↓
+Nếu vượt limit → HTTP 429
+    ↓
+Nếu hợp lệ → xử lý request
+```
 
-📊 Kiến trúc gợi ý
-Client → AWS API Gateway (rate limiting theo plan)
+---
 
-API Gateway → Microservices (Laravel/Rails)
+# 🧠 Kiến trúc thực tế cho Microservices
 
-Trong service, dùng middleware (ThrottleRequests hoặc Rack::Attack) để kiểm soát chi tiết hơn.
+## Layer 1 — API Gateway
 
-Nếu cần logic phức tạp → Redis (ElastiCache) để track request count.
+Giới hạn coarse-grained:
 
-Nếu chống spam/DDoS → thêm AWS WAF trước API Gateway.
+- Requests/sec
+- API quota
+- Public API protection
 
-👉 Tóm lại:
+---
 
-Nhanh gọn: Dùng middleware có sẵn trong Laravel/Rails.
+## Layer 2 — Service Middleware
 
-Quy mô lớn, nhiều client: Dùng AWS API Gateway Usage Plans.
+Giới hạn business-specific:
 
-Bảo mật nâng cao: Kết hợp AWS WAF + Redis để kiểm soát chi tiết.
+- Theo user
+- Theo role
+- Theo subscription
+- Theo endpoint
+
+---
+
+## Layer 3 — Redis Distributed Limiter
+
+Giúp đồng bộ giữa:
+
+- Nhiều ECS container
+- Nhiều EC2 instance
+- Multiple AZ
+
+---
+
+# 📦 Ví dụ kiến trúc AWS ECS
+
+```text
+Client
+   ↓
+CloudFront
+   ↓
+AWS WAF
+   ↓
+API Gateway
+   ↓
+Application Load Balancer
+   ↓
+ECS Cluster
+   ├── Laravel Service
+   ├── Rails Service
+   └── Auth Service
+           ↓
+       ElastiCache Redis
+```
+
+---
+
+# 🔥 Best Practices
+
+## 1. Không chỉ limit theo IP
+
+Nên kết hợp:
+
+- User ID
+- API Key
+- JWT subject
+- Tenant ID
+
+---
+
+## 2. Phân biệt Free vs Premium
+
+Ví dụ:
+
+| Plan | Rate Limit |
+|---|---|
+| Free | 60 req/min |
+| Premium | 1000 req/min |
+
+---
+
+## 3. Trả về header rõ ràng
+
+Ví dụ:
+
+```http
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 20
+Retry-After: 60
+```
+
+---
+
+## 4. Dùng Redis thay vì Memory
+
+Memory local sẽ sai khi:
+
+- Scale nhiều container
+- Multiple servers
+- Auto scaling
+
+---
+
+## 5. Log và Monitoring
+
+Dùng:
+
+- CloudWatch
+- Grafana
+- Prometheus
+
+để monitor:
+
+- 429 rate
+- Suspicious traffic
+- API abuse
+
+---
+
+# ✅ Tóm tắt
+
+| Layer | Công nghệ | Vai trò |
+|---|---|---|
+| Application | Laravel Throttle / Rack::Attack | Business rate limiting |
+| Shared State | Redis ElastiCache | Distributed counter |
+| Infrastructure | API Gateway | Global throttling |
+| Security | AWS WAF | DDoS & IP protection |
+
+---
+
+# 🎯 Kết luận
+
+Trong hệ thống microservices trên AWS:
+
+- Middleware Laravel/Rails dùng để kiểm soát logic chi tiết
+- API Gateway dùng để limit ở mức global
+- Redis dùng để đồng bộ counter giữa nhiều service/container
+- AWS WAF dùng để chống spam/DDoS
+
+Production system lớn thường kết hợp cả 4 layer để đạt:
+
+- Scalability
+- Stability
+- Security
+- Fair resource allocation
