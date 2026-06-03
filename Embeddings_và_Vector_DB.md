@@ -36,3 +36,29 @@
 - Nếu muốn **chất lượng cao, dễ scale** → OpenAIEmbeddings (có phí).  
 - Nếu cần **đa ngôn ngữ** → chọn `paraphrase-multilingual-MiniLM-L12-v2` hoặc `distiluse-base-multilingual-cased-v2`.  
 - Nếu chỉ cần **tiếng Anh, tốc độ nhanh** → chọn `all-MiniLM-L6-v2`.
+
+## Hình minh họa nguyên quá trình
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/b7270ee2-9510-446e-a05f-46f871ef17d5" />
+
+## Trong hình, bạn sẽ thấy tiến trình được chia thành 5 bước rõ ràng:
+
+- Nhập File/Tài Liệu → dùng Document Loaders (PDF, TXT, CSV, Web…).
+
+- Tách Nhỏ Văn Bản → dùng Text Splitters (Recursive, Token, Markdown…).
+
+- Tạo Embeddings → dùng HuggingFaceEmbeddings hoặc các loại embeddings khác.
+
+- Lưu Vector Database → FAISS, Chroma… để lưu trữ vector.
+
+- Truy Vấn/Trả Lời → Semantic Search để tìm kiếm ngữ nghĩa và trả kết quả.
+
+--> Như vậy bạn có thể hình dung toàn bộ pipeline từ file gốc → chunk → embeddings → vector DB → query một cách trực quan.
+
+# Nói về chunk data
+
+<img width="933" height="141" alt="image" src="https://github.com/user-attachments/assets/d61b063b-1ea1-43bc-9b23-4b0f89ece879" />
+<img width="917" height="695" alt="image" src="https://github.com/user-attachments/assets/4bb5ddf9-ee0b-41ee-940d-3fbdb717bd65" />
+<img width="871" height="505" alt="image" src="https://github.com/user-attachments/assets/20038476-ae5f-451c-8e9a-47ddbecda057" />
+
+
+
