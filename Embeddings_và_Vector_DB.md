@@ -60,5 +60,39 @@
 <img width="917" height="695" alt="image" src="https://github.com/user-attachments/assets/4bb5ddf9-ee0b-41ee-940d-3fbdb717bd65" />
 <img width="871" height="505" alt="image" src="https://github.com/user-attachments/assets/20038476-ae5f-451c-8e9a-47ddbecda057" />
 
+# Nói về ChromaDB
+
+<img width="945" height="541" alt="image" src="https://github.com/user-attachments/assets/36a7af10-6620-4f98-b8ef-ca299d5fb63a" />
+
+## Note: nói về " persist_directory=VECTOR_DB_DIR" trong khai báo
+
+```
+vector_store = Chroma.from_documents(
+            documents=all_chunks,
+            embedding=embeddings,
+            persist_directory=VECTOR_DB_DIR
+        )
+```
+<img width="965" height="278" alt="image" src="https://github.com/user-attachments/assets/31cafa1a-3251-4808-bfdb-06cdb4c9629a" />
+
+## Nói đến cái cuối trong AI, bộ não LLM (Large Language Model)của AI agent
+
+<img width="1002" height="532" alt="image" src="https://github.com/user-attachments/assets/1cf7ebc3-f30f-4b66-8693-618cb1d438e9" />
+<img width="933" height="718" alt="image" src="https://github.com/user-attachments/assets/3aad2e9d-455b-4e17-8325-fbc222fad015" />
+<img width="757" height="182" alt="image" src="https://github.com/user-attachments/assets/17620449-c9f5-49cd-a880-6855286c4379" />
+
+## Flow toàn hệ thốnf 1 con AI agent
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/eaafd1ec-6a86-4fef-9347-5f390dc28320" />
+<img width="717" height="642" alt="image" src="https://github.com/user-attachments/assets/0dc915ae-5676-4a32-b2f9-508f6ffb93a8" />
+<img width="936" height="122" alt="image" src="https://github.com/user-attachments/assets/c0e10047-d68a-4911-ac21-e924b4b99643" />
+
+
+
+
+
+
+
+
+
 
 
