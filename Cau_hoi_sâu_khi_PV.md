@@ -42,6 +42,46 @@
     - Sau đó truy xuất trực tiếp dữ liệu thay vì quét toàn bộ bảng.
   - Index cần được **cập nhật đồng bộ** khi có insert/update/delete để đảm bảo tính chính xác.
 
+### Nên đánh index những trường nào?
+- **Trường thường xuyên được truy vấn**: Các cột xuất hiện nhiều trong `WHERE`, `JOIN`, `ORDER BY`, `GROUP BY`.
+- **Khóa ngoại (Foreign Key)**: Giúp tăng tốc join giữa các bảng.
+- **Trường tìm kiếm**: Nếu thường xuyên lọc theo email, username, hoặc status → nên đánh index.
+- **Trường duy nhất (Unique)**: Ví dụ số điện thoại, mã khách hàng, mã đơn hàng.
+- **Không nên đánh index**:
+  - Các trường có dữ liệu thay đổi liên tục (update nhiều) vì index phải cập nhật liên tục → tốn chi phí.
+  - Các trường có độ phân tán thấp (ví dụ: giới tính chỉ có "Nam/Nữ") → index không hiệu quả.
+
+---
+
+### Nên dùng ID tăng dần hay UUID v6?
+- **ID tăng dần (Auto Increment / Sequence)**:
+  - Ưu điểm:
+    - Dễ đọc, dễ debug.
+    - Index hiệu quả vì dữ liệu được chèn tuần tự → ít gây phân mảnh.
+    - Thích hợp cho hệ thống nhỏ hoặc vừa.
+  - Nhược điểm:
+    - Có thể đoán được số lượng bản ghi (vấn đề bảo mật).
+    - Khó phân tán (distributed system) vì dễ trùng lặp khi nhiều node cùng tạo ID.
+
+- **UUID (đặc biệt UUID v6)**:
+  - Ưu điểm:
+    - Tính duy nhất toàn cầu, phù hợp hệ thống phân tán, microservices.
+    - UUID v6 cải tiến so với v4: có **tính tuần tự theo thời gian**, giúp index hiệu quả hơn (giảm phân mảnh so với UUID v4).
+    - Bảo mật hơn vì khó đoán số lượng bản ghi.
+  - Nhược điểm:
+    - Dài và khó đọc.
+    - Tốn dung lượng lưu trữ hơn (16 bytes so với 4 bytes của int).
+    - Index kém hiệu quả hơn ID tăng dần, nhưng UUID v6 đã cải thiện đáng kể.
+
+---
+
+### 💡 Best practice
+- Nếu hệ thống **đơn giản, một database, ít phân tán** → dùng **ID tăng dần** để tối ưu hiệu năng.
+- Nếu hệ thống **phân tán, nhiều microservices, cần tính duy nhất toàn cầu** → dùng **UUID v6** để vừa đảm bảo uniqueness vừa giảm nhược điểm về index.
+- Có thể kết hợp: dùng **UUID v6** làm primary key, nhưng vẫn giữ **ID tăng dần** nội bộ để dễ debug và hiển thị cho người dùng.
+
+---
+
 ---
 
 
