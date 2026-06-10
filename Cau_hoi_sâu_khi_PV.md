@@ -16,7 +16,12 @@
     - `Access-Control-Allow-Methods`: liệt kê các phương thức được phép (`GET`, `POST`, …).
     - `Access-Control-Allow-Headers`: cho phép các header tùy chỉnh.
   - Nếu hợp lệ, trình duyệt mới gửi request chính thức. Nếu không, request bị chặn.
-
+ 
+    <img width="957" height="606" alt="image" src="https://github.com/user-attachments/assets/7575ee80-efc3-4af6-854b-a229a765bb83" />
+    <img width="936" height="685" alt="image" src="https://github.com/user-attachments/assets/7555d74f-bc99-4274-9064-9b2fc512d61c" />
+    <img width="957" height="547" alt="image" src="https://github.com/user-attachments/assets/0a30c26c-33b3-403c-a8a6-518dd6dc417f" />
+    <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/cab7de14-f52c-4d33-8bdb-ec528738639c" />
+    <img width="951" height="582" alt="image" src="https://github.com/user-attachments/assets/196f01d4-05df-4d69-9a84-2b2cd9a817d2" />
 ---
 
 ### 3. Status HTTP API trả về và cách thống nhất trong hệ thống nhiều third-party/microservices
