@@ -44,7 +44,7 @@
 
 ---
 
-## 📊 Sơ đồ luồng dữ liệu
+## 📊 Sơ đồ luồng dữ liệu(Data flow diagram)
 ```Producer → Channel → Exchange → Queue → Consumer```
 
 - Producer chỉ biết gửi vào Exchange.
