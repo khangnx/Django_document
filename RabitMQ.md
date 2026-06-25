@@ -36,7 +36,7 @@
 
 ---
 
-## 🔗 Mối quan hệ tổng thể
+## 🔗 Mối quan hệ tổng thể (Overall relationship)
 1. **Producer** tạo message và gửi qua **Channel**.
 2. **Channel** chuyển message đến **Exchange**.
 3. **Exchange** định tuyến message đến một hoặc nhiều **Queue** dựa trên binding/routing.
