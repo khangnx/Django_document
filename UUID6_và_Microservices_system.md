@@ -129,7 +129,7 @@ class Order(Base):
     public_id = Column(String(32), unique=True, default=generate_random_token)
 ```
 
-# Quy trình hoạt động khi Update / Delete
+- Quy trình hoạt động khi Update / Delete
 Frontend: Gửi Request kèm theo public_id lên URL (Ví dụ: PUT /api/orders/ord_f83k9d2 hoặc DELETE /api/orders/ord_f83k9d2).
 
 Backend (FastAPI Router): * Nhận chuỗi ord_f83k9d2.
